@@ -8,8 +8,8 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Auto Hunt Rental",
-  description: "Prototype web rental mobil dengan dashboard admin",
+  title: "Mitra Mobil",
+  description: "Prototype website rental dan jual beli mobil ",
 };
 
 export default function RootLayout({
