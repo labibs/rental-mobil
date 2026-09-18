@@ -1,4 +1,7 @@
+ "use client";
+
 import Link from "next/link";
+import { useMemo, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -13,6 +16,7 @@ import {
   Home,
   KeyRound,
   LayoutDashboard,
+  LogOut,
   MapPin,
   MoreHorizontal,
   Plus,
@@ -68,7 +72,62 @@ const fleets = [
   ["Toyota Supra", "Sport", "B 9088 TR", "Servis", "64%"],
 ];
 
+const navItems = [
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { key: "bookings", label: "Booking", icon: ClipboardList },
+  { key: "fleet", label: "Armada", icon: KeyRound },
+  { key: "customers", label: "Pelanggan", icon: Users },
+  { key: "service", label: "Servis", icon: Wrench },
+  { key: "settings", label: "Pengaturan", icon: Settings },
+];
+
 export default function AdminPage() {
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [query, setQuery] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showCarForm, setShowCarForm] = useState(false);
+  const [fleetRows, setFleetRows] = useState(fleets);
+  const [newCar, setNewCar] = useState({
+    name: "",
+    type: "SUV",
+    plate: "",
+  });
+
+  const filteredBookings = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return bookings;
+    return bookings.filter((row) =>
+      row.join(" ").toLowerCase().includes(normalizedQuery),
+    );
+  }, [query]);
+
+  const currentSection =
+    navItems.find((item) => item.key === activeSection) || navItems[0];
+
+  function handleAddCar(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!newCar.name.trim() || !newCar.plate.trim()) return;
+
+    setFleetRows((current) => [
+      [
+        newCar.name.trim(),
+        newCar.type,
+        newCar.plate.trim().toUpperCase(),
+        "Tersedia",
+        "100%",
+      ],
+      ...current,
+    ]);
+    setNewCar({ name: "", type: "SUV", plate: "" });
+    setShowCarForm(false);
+    setActiveSection("fleet");
+  }
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" });
+    window.location.href = "/admin/login";
+  }
+
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
@@ -79,59 +138,74 @@ export default function AdminPage() {
           Auto.Hunt
         </Link>
         <nav>
-          <a className="active">
-            <LayoutDashboard size={18} />
-            Dashboard
-          </a>
-          <a>
-            <ClipboardList size={18} />
-            Booking
-          </a>
-          <a>
-            <KeyRound size={18} />
-            Armada
-          </a>
-          <a>
-            <Users size={18} />
-            Pelanggan
-          </a>
-          <a>
-            <Wrench size={18} />
-            Servis
-          </a>
-          <a>
-            <Settings size={18} />
-            Pengaturan
-          </a>
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                type="button"
+                key={item.key}
+                className={activeSection === item.key ? "active" : ""}
+                onClick={() => setActiveSection(item.key)}
+              >
+                <Icon size={18} />
+                {item.label}
+              </button>
+            );
+          })}
         </nav>
         <div className="support-card">
           <ShieldCheck size={22} />
           <strong>Proteksi Aktif</strong>
           <span>Semua transaksi hari ini terpantau aman.</span>
         </div>
+        <button type="button" className="admin-logout" onClick={handleLogout}>
+          <LogOut size={17} />
+          Keluar
+        </button>
       </aside>
 
       <section className="admin-main">
         <header className="admin-header">
           <div>
             <p>Admin Panel</p>
-            <h1>Dashboard Rental Mobil</h1>
+            <h1>{currentSection.label} Rental Mobil</h1>
           </div>
           <label className="admin-search">
             <Search size={18} />
-            <input placeholder="Cari booking, mobil, pelanggan..." />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Cari booking, mobil, pelanggan..."
+            />
           </label>
-          <button className="icon-button light" title="Notifikasi">
+          <button
+            type="button"
+            className="icon-button light"
+            title="Notifikasi"
+            onClick={() => setShowNotifications((current) => !current)}
+          >
             <Bell size={18} />
             <i />
           </button>
-          <button className="primary-admin-button">
+          <button
+            type="button"
+            className="primary-admin-button"
+            onClick={() => setShowCarForm(true)}
+          >
             <Plus size={17} />
             Tambah Mobil
           </button>
         </header>
 
-        <div className="stats-grid">
+        {showNotifications && (
+          <div className="admin-notice">
+            <Bell size={17} />
+            <span>2 booking menunggu persetujuan hari ini.</span>
+          </div>
+        )}
+
+        {activeSection === "dashboard" && (
+          <div className="stats-grid">
           {stats.map((item) => {
             const Icon = item.icon;
             const negative = item.trend.startsWith("-");
@@ -155,9 +229,11 @@ export default function AdminPage() {
               </article>
             );
           })}
-        </div>
+          </div>
+        )}
 
-        <div className="admin-layout">
+        {activeSection === "dashboard" ? (
+          <div className="admin-layout">
           <section className="admin-card wide">
             <div className="section-title">
               <div>
@@ -177,7 +253,7 @@ export default function AdminPage() {
                 <span>Status</span>
                 <span>Total</span>
               </div>
-              {bookings.map((row) => (
+              {filteredBookings.map((row) => (
                 <div className="table-row" key={row[0]}>
                   {row.map((cell, index) => (
                     <span
@@ -189,6 +265,9 @@ export default function AdminPage() {
                   ))}
                 </div>
               ))}
+              {filteredBookings.length === 0 && (
+                <p className="empty-state">Booking tidak ditemukan.</p>
+              )}
             </div>
           </section>
 
@@ -234,7 +313,7 @@ export default function AdminPage() {
               </button>
             </div>
             <div className="fleet-list">
-              {fleets.map((item) => (
+              {fleetRows.map((item) => (
                 <article key={item[0]}>
                   <div className="fleet-thumb">
                     <Car size={22} />
@@ -276,7 +355,170 @@ export default function AdminPage() {
               ))}
             </div>
           </section>
-        </div>
+          </div>
+        ) : (
+          <section className="admin-card admin-section-page">
+            <div className="section-title">
+              <div>
+                <p>Manajemen</p>
+                <h2>{currentSection.label}</h2>
+              </div>
+              {activeSection === "fleet" && (
+                <button
+                  type="button"
+                  className="mini-action"
+                  onClick={() => setShowCarForm(true)}
+                >
+                  <Plus size={16} />
+                  Unit
+                </button>
+              )}
+            </div>
+
+            {activeSection === "bookings" && (
+              <div className="booking-table">
+                <div className="table-row table-head">
+                  <span>ID</span>
+                  <span>Pelanggan</span>
+                  <span>Mobil</span>
+                  <span>Tanggal</span>
+                  <span>Status</span>
+                  <span>Total</span>
+                </div>
+                {filteredBookings.map((row) => (
+                  <div className="table-row" key={row[0]}>
+                    {row.map((cell, index) => (
+                      <span
+                        key={`${row[0]}-${cell}`}
+                        className={index === 4 ? `status ${cell.toLowerCase()}` : ""}
+                      >
+                        {cell}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+                {filteredBookings.length === 0 && (
+                  <p className="empty-state">Booking tidak ditemukan.</p>
+                )}
+              </div>
+            )}
+
+            {activeSection === "fleet" && (
+              <div className="fleet-list">
+                {fleetRows.map((item) => (
+                  <article key={`${item[0]}-${item[2]}`}>
+                    <div className="fleet-thumb">
+                      <Car size={22} />
+                    </div>
+                    <div>
+                      <strong>{item[0]}</strong>
+                      <span>{item[1]} / {item[2]}</span>
+                    </div>
+                    <span className={`fleet-status ${item[3].toLowerCase()}`}>
+                      {item[3]}
+                    </span>
+                    <div className="health">
+                      <Gauge size={16} />
+                      {item[4]}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {activeSection === "customers" && (
+              <div className="customer-list">
+                {["Rafi Putra", "Nadia R.", "Maya Sari"].map((name, index) => (
+                  <div key={name}>
+                    <span>{name.charAt(0)}</span>
+                    <div>
+                      <strong>{name}</strong>
+                      <small>{8 - index} transaksi</small>
+                    </div>
+                    <b>Rp {12 - index * 2},1 jt</b>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeSection === "service" && (
+              <div className="admin-placeholder">
+                <Wrench size={30} />
+                <h3>Jadwal servis</h3>
+                <p>Belum ada unit yang masuk antrean servis.</p>
+              </div>
+            )}
+
+            {activeSection === "settings" && (
+              <div className="admin-placeholder">
+                <Settings size={30} />
+                <h3>Pengaturan panel</h3>
+                <p>Pengaturan akun dan notifikasi siap dikembangkan.</p>
+              </div>
+            )}
+          </section>
+        )}
+
+        {showCarForm && (
+          <div className="admin-modal-backdrop" role="presentation">
+            <form className="admin-modal" onSubmit={handleAddCar}>
+              <div className="section-title">
+                <div>
+                  <p>Armada</p>
+                  <h2>Tambah Mobil</h2>
+                </div>
+                <button
+                  type="button"
+                  className="icon-button light"
+                  onClick={() => setShowCarForm(false)}
+                  aria-label="Tutup formulir"
+                >
+                  ×
+                </button>
+              </div>
+              <label>
+                Nama mobil
+                <input
+                  required
+                  value={newCar.name}
+                  onChange={(event) =>
+                    setNewCar({ ...newCar, name: event.target.value })
+                  }
+                  placeholder="Contoh: Hyundai Ioniq 5"
+                />
+              </label>
+              <label>
+                Tipe
+                <select
+                  value={newCar.type}
+                  onChange={(event) =>
+                    setNewCar({ ...newCar, type: event.target.value })
+                  }
+                >
+                  <option>SUV</option>
+                  <option>Sedan</option>
+                  <option>Electric</option>
+                  <option>Sport</option>
+                </select>
+              </label>
+              <label>
+                Nomor polisi
+                <input
+                  required
+                  value={newCar.plate}
+                  onChange={(event) =>
+                    setNewCar({ ...newCar, plate: event.target.value })
+                  }
+                  placeholder="B 1234 AH"
+                />
+              </label>
+              <button type="submit" className="primary-admin-button">
+                <Plus size={17} />
+                Simpan Unit
+              </button>
+            </form>
+          </div>
+        )}
       </section>
     </main>
   );
