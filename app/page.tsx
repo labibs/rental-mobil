@@ -311,14 +311,14 @@ function TopBar() {
     <header className="top-bar">
       <button className="location-pill">
         <MapPin size={16} />
-        Semarang, Indonesia
+        Cilacap
         <ChevronDown size={14} />
       </button>
       <Link href="/" className="brand">
         <span>
           <Car size={21} />
         </span>
-        Auto.Hunt
+        Mitra.Mobil
       </Link>
       <div className="top-actions">
         <button className="icon-button" title="Pesan">

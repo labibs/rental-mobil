@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/cars/bmw-m4-coupe":{},"/cars/bmw-i4-m-sport":{},"/cars/toyota-gr-supra":{},"/cars/tesla-model-s":{},"/cars/honda-civic-type-r":{},"/cars/porsche-taycan":{},"/cars/mercedes-benz-c300":{},"/cars/toyota-alphard":{}},"dynamicRoutes":{"/cars/[id]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/cars/[id]","routeRegex":"^\\/cars\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"03ea757b95defd4e24b98658cb7865f6","previewModeSigningKey":"f63f4fc59b0fc47cf7e7d2cef3331f4ff0e13c76b481291952e44d7a147d1912","previewModeEncryptionKey":"a78746722760628f8bbf8833b9add01f7b744be825b0de71cf12362ef1d83f30"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "0d92cda1a541f9c443fdf86aa464e226",
+    "previewModeSigningKey": "f8f59839b4e75c34887da630859ad221b4b8f4daedf425e6bd4c349e35e61966",
+    "previewModeEncryptionKey": "be918c7f5e5079c4dafe0ee39264d3a5086ff1b8900ef305b79787c07b5f1039"
+  }
+}

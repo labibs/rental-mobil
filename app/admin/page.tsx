@@ -135,7 +135,7 @@ export default function AdminPage() {
           <span>
             <Car size={21} />
           </span>
-          Auto.Hunt
+          Mitra.Mobil
         </Link>
         <nav>
           {navItems.map((item) => {

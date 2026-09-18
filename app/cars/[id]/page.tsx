@@ -40,7 +40,7 @@ export default async function CarDetailPage({
           <span>
             <Car size={21} />
           </span>
-          Auto.Hunt
+          Mitra.Mobil
         </Link>
       </header>
 

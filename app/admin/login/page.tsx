@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
           <span>
             <Car size={22} />
           </span>
-          Auto.Hunt
+          Mitra.Mobil
         </div>
         <p className="admin-login-eyebrow">Area terbatas</p>
         <h1>Masuk ke Admin Panel</h1>
