@@ -37,7 +37,7 @@ const stats = [
     className: "revenue",
   },
   {
-    label: "Booking Aktif",
+    label: "Pemesanan Aktif",
     value: "42",
     trend: "+9.8%",
     icon: ClipboardList,
@@ -68,7 +68,7 @@ const bookings = [
 
 const fleets = [
   ["BMW M4 Coupe", "Sedan", "B 1420 AU", "Tersedia", "92%"],
-  ["Tesla Model S", "Electric", "B 7710 EV", "Disewa", "87%"],
+  ["Tesla Model S", "Listrik", "B 7710 EV", "Disewa", "87%"],
   ["Toyota Supra", "Sport", "B 9088 TR", "Servis", "64%"],
 ];
 
@@ -167,7 +167,7 @@ export default function AdminPage() {
       <section className="admin-main">
         <header className="admin-header">
           <div>
-            <p>Admin Panel</p>
+            <p>Panel Admin</p>
             <h1>{currentSection.label} Rental Mobil</h1>
           </div>
           <label className="admin-search">
@@ -200,7 +200,7 @@ export default function AdminPage() {
         {showNotifications && (
           <div className="admin-notice">
             <Bell size={17} />
-            <span>2 booking menunggu persetujuan hari ini.</span>
+            <span>2 pemesanan menunggu persetujuan hari ini.</span>
           </div>
         )}
 
@@ -238,7 +238,7 @@ export default function AdminPage() {
             <div className="section-title">
               <div>
                 <p>Operasional</p>
-                <h2>Booking Terbaru</h2>
+                <h2>Pemesanan Terbaru</h2>
               </div>
               <button title="Menu lainnya">
                 <MoreHorizontal size={19} />
@@ -266,7 +266,7 @@ export default function AdminPage() {
                 </div>
               ))}
               {filteredBookings.length === 0 && (
-                <p className="empty-state">Booking tidak ditemukan.</p>
+                <p className="empty-state">Pemesanan tidak ditemukan.</p>
               )}
             </div>
           </section>
@@ -304,7 +304,7 @@ export default function AdminPage() {
           <section className="admin-card wide">
             <div className="section-title">
               <div>
-                <p>Fleet</p>
+                <p>Armada</p>
                 <h2>Manajemen Armada</h2>
               </div>
               <button className="mini-action">
@@ -398,7 +398,7 @@ export default function AdminPage() {
                   </div>
                 ))}
                 {filteredBookings.length === 0 && (
-                  <p className="empty-state">Booking tidak ditemukan.</p>
+                  <p className="empty-state">Pemesanan tidak ditemukan.</p>
                 )}
               </div>
             )}
