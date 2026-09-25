@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bell,
   Bookmark,
@@ -23,7 +23,6 @@ import {
   Zap,
 } from "lucide-react";
 import {
-  brands,
   cars,
   conditions,
   formatRupiah,
@@ -51,11 +50,31 @@ export default function Home() {
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("recommended");
+  const [consignedCars, setConsignedCars] = useState<CarItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/consignments")
+      .then((response) => (response.ok ? response.json() : { cars: [] }))
+      .then((data) =>
+        setConsignedCars(Array.isArray(data.cars) ? data.cars : []),
+      )
+      .catch(() => {});
+  }, []);
+
+  const allCars = useMemo(
+    () => [...cars, ...consignedCars],
+    [consignedCars],
+  );
+
+  const allBrands = useMemo(
+    () => Array.from(new Set(allCars.map((car) => car.brand))),
+    [allCars],
+  );
 
   const filteredCars = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return cars
+    return allCars
       .filter((car) => car.modes.includes(mode))
       .filter((car) => car.condition === condition)
       .filter((car) =>
@@ -76,7 +95,7 @@ export default function Home() {
         if (sort === "rating") return b.rating - a.rating;
         return b.trips + b.rating * 10 - (a.trips + a.rating * 10);
       });
-  }, [condition, freeTestDrive, maxPrice, mode, query, selectedBrands, sort]);
+  }, [allCars, condition, freeTestDrive, maxPrice, mode, query, selectedBrands, sort]);
 
   function toggleBrand(brand: string) {
     setSelectedBrands((current) =>
@@ -137,7 +156,7 @@ export default function Home() {
 
             <div className="field-group">
               <p>Brand</p>
-              {brands.map((brand) => (
+              {allBrands.map((brand) => (
                 <label className="check-row" key={brand}>
                   <span>
                     <span className="brand-mark">{brand.charAt(0)}</span>
@@ -348,10 +367,14 @@ function TopBar() {
           <LayoutDashboard size={16} />
           Admin
         </Link>
-        <button className="sell-button">
+        <Link
+          href="/titip-mobil"
+          className="sell-button"
+          data-testid="titip-mobil-menu-link"
+        >
           <Plus size={16} />
-          Jual Mobil
-        </button>
+          Titip Mobil
+        </Link>
       </div>
     </header>
   );

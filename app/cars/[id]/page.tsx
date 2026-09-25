@@ -11,7 +11,9 @@ import {
   Users,
 } from "lucide-react";
 import { BookingForm } from "./booking-form";
-import { cars, formatBuyPrice } from "../../data/cars";
+import { cars, formatBuyPrice, type CarItem } from "../../data/cars";
+import { listConsignments } from "../../lib/consignment-store";
+import { consignmentToCarItem } from "../../lib/consignment-types";
 
 export function generateStaticParams() {
   return cars.map((car) => ({ id: car.id }));
@@ -23,7 +25,15 @@ export default async function CarDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const car = cars.find((item) => item.id === id);
+  let car: CarItem | undefined = cars.find((item) => item.id === id);
+
+  if (!car) {
+    const consigned = await listConsignments();
+    car = consigned
+      .filter((item) => item.status === "approved")
+      .map(consignmentToCarItem)
+      .find((item) => item.id === id);
+  }
 
   if (!car) {
     notFound();

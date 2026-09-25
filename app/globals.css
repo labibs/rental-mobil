@@ -1710,3 +1710,369 @@ input[type="checkbox"] {
 .admin-login-hint code {
   color: #cbdcff;
 }
+
+
+/* Titip Mobil */
+.consign-shell {
+  width: min(880px, 100%);
+  margin: 0 auto;
+  padding: 34px 22px 60px;
+  display: grid;
+  gap: 22px;
+}
+
+.consign-hero p {
+  margin: 0 0 6px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.consign-hero h1 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.1;
+}
+
+.consign-hero span {
+  display: block;
+  margin-top: 10px;
+  max-width: 560px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.consign-kind-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.consign-kind-grid button {
+  padding: 18px;
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.consign-kind-grid button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(55, 65, 81, 0.08);
+}
+
+.consign-kind-grid button.active {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.consign-kind-grid svg {
+  color: var(--blue);
+}
+
+.consign-kind-grid strong {
+  font-size: 16px;
+}
+
+.consign-kind-grid span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.consign-form {
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(31, 41, 55, 0.06);
+}
+
+.consign-section {
+  display: grid;
+  gap: 14px;
+}
+
+.consign-section h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.consign-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.consign-form label {
+  display: grid;
+  gap: 7px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.consign-form input,
+.consign-form select,
+.consign-form textarea {
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  outline: 0;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+}
+
+.consign-form input,
+.consign-form select {
+  height: 44px;
+}
+
+.consign-form textarea {
+  padding: 12px;
+  resize: vertical;
+}
+
+.consign-form input:focus,
+.consign-form select:focus,
+.consign-form textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.consign-photo {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  align-items: end;
+}
+
+.consign-upload {
+  height: 140px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  overflow: hidden;
+  color: var(--blue);
+  border: 1px dashed #b9c8e4;
+  border-radius: 8px;
+  background: #f7faff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.consign-upload img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.consign-error {
+  margin: 0;
+  padding: 11px 13px;
+  color: #b42318;
+  border: 1px solid #fecdca;
+  border-radius: 7px;
+  background: #fef3f2;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.consign-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  color: #1f65e8;
+  border: 1px solid #bfd4ff;
+  border-radius: 8px;
+  background: #edf4ff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.consign-success {
+  padding: 44px 24px;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(31, 41, 55, 0.06);
+}
+
+.consign-success svg {
+  color: var(--green);
+}
+
+.consign-success h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.consign-success p {
+  margin: 0;
+  max-width: 520px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.consign-success div {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.consign-success button,
+.consign-success a {
+  height: 44px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.consign-success button {
+  color: #fff;
+  border: 0;
+  background: var(--blue);
+}
+
+.consign-success a {
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.spin {
+  animation: consign-spin 0.9s linear infinite;
+}
+
+@keyframes consign-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Admin - Titip Mobil */
+.nav-badge {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--rose);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.consign-admin-list {
+  display: grid;
+  gap: 13px;
+}
+
+.consign-admin-list article {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto auto auto;
+  gap: 14px;
+  align-items: center;
+  padding: 13px;
+  border-radius: 8px;
+  background: #f7f9fd;
+}
+
+.consign-thumb {
+  width: 64px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #fff;
+  border-radius: 8px;
+  background: #151820;
+}
+
+.consign-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.consign-info {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.consign-info span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.consign-price {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.status.ditolak {
+  color: #b42318;
+  background: #fef3f2;
+}
+
+.consign-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.consign-actions button {
+  height: 34px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.consign-actions .approve {
+  color: #fff;
+  background: var(--green);
+}
+
+.consign-actions .reject {
+  color: #b42318;
+  background: #fef3f2;
+}
+
+@media (max-width: 700px) {
+  .consign-grid,
+  .consign-kind-grid,
+  .consign-photo {
+    grid-template-columns: 1fr;
+  }
+
+  .consign-admin-list article {
+    grid-template-columns: 64px 1fr;
+  }
+}

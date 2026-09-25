@@ -1,0 +1,38 @@
+[
+  {
+    "id": "titip-muhm4t6z-lcyv6",
+    "kind": "jual",
+    "ownerName": "Sari Wulandari",
+    "whatsapp": "089876543210",
+    "brand": "Honda",
+    "name": "Brio Satya",
+    "year": 2020,
+    "transmission": "Otomatis",
+    "fuel": "Bensin",
+    "plate": "B 7777 QA",
+    "price": 165000000,
+    "location": "Semarang Barat",
+    "image": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1100&q=80",
+    "description": "KM rendah, tangan pertama.",
+    "status": "rejected",
+    "createdAt": "2026-09-25T23:49:41.195Z"
+  },
+  {
+    "id": "titip-muhm4t2y-kusum",
+    "kind": "sewa",
+    "ownerName": "Budi Santoso",
+    "whatsapp": "081234567890",
+    "brand": "Daihatsu",
+    "name": "Xenia R",
+    "year": 2019,
+    "transmission": "Manual",
+    "fuel": "Bensin",
+    "plate": "B 4321 XY",
+    "price": 275000,
+    "location": "Cilacap Kota",
+    "image": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1100&q=80",
+    "description": "Mobil keluarga terawat, rutin servis.",
+    "status": "approved",
+    "createdAt": "2026-09-25T23:49:41.050Z"
+  }
+]

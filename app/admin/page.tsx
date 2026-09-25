@@ -1,7 +1,7 @@
  "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -13,7 +13,7 @@ import {
   ClipboardList,
   Clock3,
   Gauge,
-  Home,
+  Handshake,
   KeyRound,
   LayoutDashboard,
   LogOut,
@@ -26,7 +26,10 @@ import {
   UserRound,
   Users,
   Wrench,
+  XCircle,
 } from "lucide-react";
+import { formatRupiah } from "../data/cars";
+import type { Consignment } from "../lib/consignment-types";
 
 const stats = [
   {
@@ -76,6 +79,7 @@ const navItems = [
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { key: "bookings", label: "Booking", icon: ClipboardList },
   { key: "fleet", label: "Armada", icon: KeyRound },
+  { key: "consignments", label: "Titip Mobil", icon: Handshake },
   { key: "customers", label: "Pelanggan", icon: Users },
   { key: "service", label: "Servis", icon: Wrench },
   { key: "settings", label: "Pengaturan", icon: Settings },
@@ -92,6 +96,25 @@ export default function AdminPage() {
     type: "SUV",
     plate: "",
   });
+  const [consignments, setConsignments] = useState<Consignment[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/consignments")
+      .then((response) =>
+        response.ok ? response.json() : { consignments: [] },
+      )
+      .then((data) =>
+        setConsignments(
+          Array.isArray(data.consignments) ? data.consignments : [],
+        ),
+      )
+      .catch(() => {});
+  }, []);
+
+  const pendingConsignments = useMemo(
+    () => consignments.filter((item) => item.status === "pending").length,
+    [consignments],
+  );
 
   const filteredBookings = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -123,6 +146,28 @@ export default function AdminPage() {
     setActiveSection("fleet");
   }
 
+  async function handleConsignmentAction(
+    id: string,
+    action: "approve" | "reject",
+  ) {
+    try {
+      const response = await fetch(`/api/admin/consignments/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+      setConsignments((current) =>
+        current.map((item) => (item.id === id ? result.consignment : item)),
+      );
+    } catch {
+      // aksi bisa dicoba ulang oleh admin
+    }
+  }
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     window.location.href = "/admin/login";
@@ -146,9 +191,18 @@ export default function AdminPage() {
                 key={item.key}
                 className={activeSection === item.key ? "active" : ""}
                 onClick={() => setActiveSection(item.key)}
+                data-testid={`admin-nav-${item.key}`}
               >
                 <Icon size={18} />
                 {item.label}
+                {item.key === "consignments" && pendingConsignments > 0 && (
+                  <span
+                    className="nav-badge"
+                    data-testid="consign-pending-badge"
+                  >
+                    {pendingConsignments}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -168,7 +222,11 @@ export default function AdminPage() {
         <header className="admin-header">
           <div>
             <p>Panel Admin</p>
-            <h1>{currentSection.label} Rental Mobil</h1>
+            <h1>
+              {activeSection === "consignments"
+                ? "Persetujuan Titip Mobil"
+                : `${currentSection.label} Rental Mobil`}
+            </h1>
           </div>
           <label className="admin-search">
             <Search size={18} />
@@ -200,7 +258,11 @@ export default function AdminPage() {
         {showNotifications && (
           <div className="admin-notice">
             <Bell size={17} />
-            <span>2 pemesanan menunggu persetujuan hari ini.</span>
+            <span data-testid="consign-notice">
+              {pendingConsignments > 0
+                ? `${pendingConsignments} pengajuan titip mobil menunggu persetujuan admin.`
+                : "2 pemesanan menunggu persetujuan hari ini."}
+            </span>
           </div>
         )}
 
@@ -421,6 +483,98 @@ export default function AdminPage() {
                       <Gauge size={16} />
                       {item[4]}
                     </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {activeSection === "consignments" && (
+              <div
+                className="consign-admin-list"
+                data-testid="consign-admin-list"
+              >
+                {consignments.length === 0 && (
+                  <div className="admin-placeholder">
+                    <Handshake size={30} />
+                    <h3>Belum ada pengajuan</h3>
+                    <p>
+                      Pengajuan titip mobil dari pengguna akan muncul di sini.
+                    </p>
+                  </div>
+                )}
+                {consignments.map((item) => (
+                  <article key={item.id} data-testid={`consign-row-${item.id}`}>
+                    <div className="consign-thumb">
+                      {item.image ? (
+                        <img
+                          src={item.image}
+                          alt={`${item.brand} ${item.name}`}
+                        />
+                      ) : (
+                        <Car size={22} />
+                      )}
+                    </div>
+                    <div className="consign-info">
+                      <strong>
+                        {item.brand} {item.name} ({item.year})
+                      </strong>
+                      <span>
+                        {item.kind === "sewa" ? "Titip Sewa" : "Titip Jual"} ·{" "}
+                        {item.transmission} · {item.location}
+                      </span>
+                      <span>
+                        {item.ownerName} · {item.whatsapp}
+                      </span>
+                    </div>
+                    <strong className="consign-price">
+                      {item.kind === "sewa"
+                        ? `${formatRupiah(item.price)} /hari`
+                        : formatRupiah(item.price)}
+                    </strong>
+                    <span
+                      className={`status ${
+                        item.status === "pending"
+                          ? "menunggu"
+                          : item.status === "approved"
+                            ? "disetujui"
+                            : "ditolak"
+                      }`}
+                      data-testid={`consign-status-${item.id}`}
+                    >
+                      {item.status === "pending"
+                        ? "Menunggu"
+                        : item.status === "approved"
+                          ? "Disetujui"
+                          : "Ditolak"}
+                    </span>
+                    {item.status === "pending" ? (
+                      <div className="consign-actions">
+                        <button
+                          type="button"
+                          className="approve"
+                          onClick={() =>
+                            handleConsignmentAction(item.id, "approve")
+                          }
+                          data-testid={`approve-${item.id}`}
+                        >
+                          <CheckCircle2 size={15} />
+                          Setujui
+                        </button>
+                        <button
+                          type="button"
+                          className="reject"
+                          onClick={() =>
+                            handleConsignmentAction(item.id, "reject")
+                          }
+                          data-testid={`reject-${item.id}`}
+                        >
+                          <XCircle size={15} />
+                          Tolak
+                        </button>
+                      </div>
+                    ) : (
+                      <span />
+                    )}
                   </article>
                 ))}
               </div>
