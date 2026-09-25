@@ -35,6 +35,14 @@ import {
 
 const MAX_PRICE = 300000;
 
+function getConditionLabel(condition: CarCondition) {
+  return condition === "New Car" ? "Mobil Baru" : "Mobil Bekas";
+}
+
+function getModeLabel(mode: OfferMode) {
+  return mode === "Buy Car" ? "Beli Mobil" : "Sewa Mobil";
+}
+
 export default function Home() {
   const [mode, setMode] = useState<OfferMode>("Rent Car");
   const [condition, setCondition] = useState<CarCondition>("New Car");
@@ -103,7 +111,7 @@ export default function Home() {
             <label className="toggle-row">
               <span className="toggle-label">
                 <ShieldCheck size={16} />
-                Free Test Drive
+                Test Drive Gratis
               </span>
               <input
                 checked={freeTestDrive}
@@ -113,7 +121,7 @@ export default function Home() {
             </label>
 
             <div className="field-group">
-              <p>Type of Car</p>
+              <p>Kondisi Mobil</p>
               <div className="segmented">
                 {conditions.map((item) => (
                   <button
@@ -121,7 +129,7 @@ export default function Home() {
                     key={item}
                     onClick={() => setCondition(item)}
                   >
-                    {item}
+                    {getConditionLabel(item)}
                   </button>
                 ))}
               </div>
@@ -143,12 +151,12 @@ export default function Home() {
                 </label>
               ))}
               <button className="more-brand">
-                More Brand <ChevronDown size={14} />
+                Merek Lain <ChevronDown size={14} />
               </button>
             </div>
 
             <div className="field-group">
-              <p>Price Range</p>
+              <p>Kisaran Harga</p>
               <div className="histogram" aria-hidden="true">
                 {Array.from({ length: 24 }).map((_, index) => (
                   <span
@@ -183,7 +191,7 @@ export default function Home() {
                     key={item}
                     onClick={() => setMode(item)}
                   >
-                    {item}
+                    {getModeLabel(item)}
                   </button>
                 ))}
               </div>
@@ -191,31 +199,31 @@ export default function Home() {
                 <Search size={18} />
                 <input
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Find car here ..."
+                  placeholder="Cari mobil di sini ..."
                   value={query}
                 />
               </label>
-              <button className="tool-button" onClick={resetFilters} title="Reset filter">
+              <button className="tool-button" onClick={resetFilters} title="Atur ulang filter">
                 <Settings2 size={18} />
                 <span>Reset</span>
               </button>
               <label className="sort-button">
                 <SlidersHorizontal size={16} />
                 <select value={sort} onChange={(event) => setSort(event.target.value)}>
-                  <option value="recommended">Recommended</option>
-                  <option value="rating">Top Rating</option>
-                  <option value="price-low">Rent Price Low</option>
-                  <option value="price-high">Rent Price High</option>
+                  <option value="recommended">Rekomendasi</option>
+                  <option value="rating">Rating Tertinggi</option>
+                  <option value="price-low">Harga Sewa Terendah</option>
+                  <option value="price-high">Harga Sewa Tertinggi</option>
                 </select>
               </label>
             </div>
 
             <div className="results-head">
-              <h1>{filteredCars.length} Car Found</h1>
+              <h1>{filteredCars.length} Mobil Ditemukan</h1>
               <div className="chips">
                 {freeTestDrive && (
                   <button onClick={() => setFreeTestDrive(false)}>
-                    Free Test Drive
+                    Test Drive Gratis
                     <X size={14} />
                   </button>
                 )}
@@ -224,11 +232,11 @@ export default function Home() {
                     setCondition(condition === "New Car" ? "User Car" : "New Car")
                   }
                 >
-                  {condition}
+                  {getConditionLabel(condition)}
                   <X size={14} />
                 </button>
                 <button onClick={() => setMaxPrice(MAX_PRICE)}>
-                  Max {formatUsd(maxPrice)}
+                  Maks. {formatUsd(maxPrice)}
                   <X size={14} />
                 </button>
                 {selectedBrands.map((brand) => (
@@ -274,7 +282,7 @@ function CarCard({ item, mode }: { item: CarItem; mode: OfferMode }) {
         <div className="card-title">
           <div>
             <h3>{item.name}</h3>
-            <p>{item.type} / {item.condition}</p>
+            <p>{item.type} / {getConditionLabel(item.condition)}</p>
           </div>
         </div>
         <div className="car-image-wrap">
@@ -342,7 +350,7 @@ function TopBar() {
         </Link>
         <button className="sell-button">
           <Plus size={16} />
-          Sell Car
+          Jual Mobil
         </button>
       </div>
     </header>
