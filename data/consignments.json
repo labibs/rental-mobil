@@ -1,5 +1,23 @@
 [
   {
+    "id": "titip-muhm9g1o-057ny",
+    "kind": "sewa",
+    "ownerName": "Test Owner",
+    "whatsapp": "081200000000",
+    "brand": "Toyota",
+    "name": "TESTX-pxgth4",
+    "year": 2021,
+    "transmission": "Manual",
+    "fuel": "Bensin",
+    "plate": "B 1234 TEST",
+    "price": 300000,
+    "location": "Cilacap",
+    "image": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1100&q=80",
+    "description": "Mobil test submit",
+    "status": "approved",
+    "createdAt": "2026-09-25T23:53:17.436Z"
+  },
+  {
     "id": "titip-muhm4t6z-lcyv6",
     "kind": "jual",
     "ownerName": "Sari Wulandari",
