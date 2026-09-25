@@ -132,13 +132,13 @@ export function BookingForm({ car }: { car: CarItem }) {
 
       <button className="booking-submit" type="submit">
         <CreditCard size={18} />
-        Booking Online
+        Pesan Online
       </button>
 
       {confirmed && (
         <div className="booking-success">
           <CheckCircle2 size={18} />
-          Booking {car.name} berhasil dibuat. Admin akan menghubungi{" "}
+          Pemesanan {car.name} berhasil dibuat. Admin akan menghubungi{" "}
           {phone || "nomor Anda"}.
         </div>
       )}
