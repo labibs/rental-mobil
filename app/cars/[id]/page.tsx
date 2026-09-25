@@ -51,7 +51,7 @@ export default async function CarDetailPage({
           </div>
           <div className="thumb-row">
             {car.gallery.map((image) => (
-              <img src={image} alt={`${car.name} gallery`} key={image} />
+              <img src={image} alt={`Galeri ${car.name}`} key={image} />
             ))}
           </div>
 
@@ -69,7 +69,7 @@ export default async function CarDetailPage({
             <div className="detail-stats">
               <span>
                 <Star size={17} fill="currentColor" />
-                {car.rating} rating
+                {car.rating} penilaian
               </span>
               <span>
                 <Users size={17} />
@@ -89,7 +89,7 @@ export default async function CarDetailPage({
               </span>
               <span>
                 <ShieldCheck size={17} />
-                {car.freeTestDrive ? "Free test drive" : "Booking terjadwal"}
+                {car.freeTestDrive ? "Test drive gratis" : "Pemesanan terjadwal"}
               </span>
             </div>
           </section>
