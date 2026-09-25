@@ -11,7 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { BookingForm } from "./booking-form";
-import { cars, formatUsd } from "../../data/cars";
+import { cars, formatBuyPrice } from "../../data/cars";
 
 export function generateStaticParams() {
   return cars.map((car) => ({ id: car.id }));
@@ -100,7 +100,7 @@ export default async function CarDetailPage({
                 <p>Informasi Unit</p>
                 <h2>Spesifikasi dan fasilitas</h2>
               </div>
-              <strong>{formatUsd(car.buyPrice)}</strong>
+              <strong>{formatBuyPrice(car.buyPrice)}</strong>
             </div>
             <div className="spec-grid">
               {car.specs.map((item) => (

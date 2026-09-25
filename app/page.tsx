@@ -27,7 +27,7 @@ import {
   cars,
   conditions,
   formatRupiah,
-  formatUsd,
+  formatBuyPrice,
   type CarCondition,
   type CarItem,
   type OfferMode,
@@ -176,8 +176,8 @@ export default function Home() {
                 value={maxPrice}
               />
               <div className="price-boxes">
-                <strong>$80.000</strong>
-                <strong>{formatUsd(maxPrice)}</strong>
+                <strong>{formatBuyPrice(80000)}</strong>
+                <strong>{formatBuyPrice(maxPrice)}</strong>
               </div>
             </div>
           </aside>
@@ -236,7 +236,7 @@ export default function Home() {
                   <X size={14} />
                 </button>
                 <button onClick={() => setMaxPrice(MAX_PRICE)}>
-                  Maks. {formatUsd(maxPrice)}
+                  Maks. {formatBuyPrice(maxPrice)}
                   <X size={14} />
                 </button>
                 {selectedBrands.map((brand) => (
@@ -271,7 +271,7 @@ export default function Home() {
 
 function CarCard({ item, mode }: { item: CarItem; mode: OfferMode }) {
   const priceLabel =
-    mode === "Buy Car" ? formatUsd(item.buyPrice) : `${formatRupiah(item.rentPrice)} / hari`;
+    mode === "Buy Car" ? formatBuyPrice(item.buyPrice) : `${formatRupiah(item.rentPrice)} / hari`;
 
   return (
     <article className="car-card">

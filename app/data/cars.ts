@@ -256,12 +256,10 @@ export const cars: CarItem[] = [
 export const brands = Array.from(new Set(cars.map((car) => car.brand)));
 export const conditions: CarCondition[] = ["New Car", "User Car"];
 
-export function formatUsd(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
+const USD_TO_IDR = 16500;
+
+export function formatBuyPrice(value: number) {
+  return formatRupiah(value * USD_TO_IDR);
 }
 
 export function formatRupiah(value: number) {
