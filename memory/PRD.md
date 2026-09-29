@@ -30,8 +30,16 @@ Web katalog rental/jual mobil (Next.js 15 prototype). Permintaan user (Sep 2026)
 - Katalog utama: fetch approved consignments dan merge ke grid (kondisi "Mobil Bekas", badge "Titip Sewa"/"Titip Jual"); halaman detail `/cars/[id]` mendukung mobil titipan (rejected/pending → 404); booking form menyesuaikan mode sewa vs jual.
 - Testing agent iteration_1: 9/9 skenario lulus (100%).
 
+## Yang Sudah Diimplementasikan (29 Sep 2026) — Multi-foto, Notifikasi WA, Share, Hero CRV
+- Upload multi-foto (maks 6) di form titip mobil: preview grid, hapus per foto, foto pertama = utama; disimpan sebagai `gallery[]` + `image` (foto utama). Halaman detail memakai `CarGallery` (thumbnail + counter).
+- Notifikasi WhatsApp ke pemilik saat admin Setujui/Tolak = **klik-untuk-kirim**: setelah PATCH sukses, `window.open(wa.me/<nomor-pemilik>?text=<pesan>)` terbuka dengan pesan siap-kirim (disetujui/ditolak). Logika di `/app/app/lib/whatsapp.ts` (`normalizeWhatsapp`, `waLink`, `ownerStatusMessage`). Dipicu di `handleConsignmentAction` (`/app/app/admin/page.tsx`).
+- Tombol "Bagikan ke WhatsApp" (`/app/app/components/share-button.tsx`) di halaman detail mobil (`/cars/[id]`).
+- Foto hero diganti Honda CR-V Hybrid RS (AI-generated) di `HERO_IMAGE` (`/app/app/data/cars.ts`).
+- Nomor WhatsApp bisnis di footer: 0821-7782-6596 (wa.me/6282177826596).
+- Testing agent iteration_3: 6/6 skenario frontend lulus (100%) — approve/reject membuka wa.me dengan nomor & pesan benar, share button, hero, galeri.
+
 ## Backlog / Next Tasks
 - P1: Migrasi penyimpanan JSON → MongoDB sebelum produksi (JSON tidak concurrency-safe).
-- P1: Notifikasi ke pemilik (WhatsApp/email) saat pengajuan disetujui/ditolak.
-- P2: Admin bisa edit/hapus pengajuan; unggah multi-foto untuk galeri.
-- P2: Caching/ISR untuk GET /api/consignments; pecah admin/page.tsx menjadi komponen per section.
+- P2: Notifikasi WA benar-benar otomatis via API (Twilio) — saat ini klik-untuk-kirim (butuh kredensial user).
+- P2: Tombol share di kartu katalog (belum, user hanya minta di detail); admin bisa edit/hapus pengajuan.
+- P2: Caching/ISR untuk GET /api/consignments; pecah admin/page.tsx menjadi komponen per section; beri feedback error saat PATCH approve/reject gagal.
