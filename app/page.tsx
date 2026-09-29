@@ -2,380 +2,173 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { ArrowRight, Car, RotateCcw } from "lucide-react";
+import { cars, type CarItem } from "./data/cars";
+import { SiteHeader } from "./components/site-header";
+import { Hero } from "./components/hero";
+import { SearchCard } from "./components/search-card";
+import { BrandStrip } from "./components/brand-strip";
+import { CarCard } from "./components/car-card";
+import { SiteFooter } from "./components/site-footer";
 import {
-  Bell,
-  Bookmark,
-  Car,
-  ChevronDown,
-  Gauge,
-  LayoutDashboard,
-  MapPin,
-  MessageCircle,
-  Plus,
-  Search,
-  Settings2,
-  ShieldCheck,
-  SlidersHorizontal,
-  Sparkles,
-  Star,
-  Users,
-  X,
-  Zap,
-} from "lucide-react";
-import {
-  cars,
-  conditions,
-  formatRupiah,
-  formatBuyPrice,
-  type CarCondition,
-  type CarItem,
-  type OfferMode,
-} from "./data/cars";
+  defaultFilters,
+  matchesFilters,
+  type Filters,
+  type SearchMode,
+} from "./components/catalog-filters";
 
-const MAX_PRICE = 300000;
+const categories = ["Populer", "MPV", "SUV", "Hatchback", "Sedan", "Listrik", "Bekas"];
 
-function getConditionLabel(condition: CarCondition) {
-  return condition === "New Car" ? "Mobil Baru" : "Mobil Bekas";
-}
-
-function getModeLabel(mode: OfferMode) {
-  return mode === "Buy Car" ? "Beli Mobil" : "Sewa Mobil";
-}
+const modeTitles: Record<SearchMode, string> = {
+  sewa: "Sewa Harian",
+  beli: "Mobil Baru",
+  bekas: "Mobil Bekas Berkualitas",
+};
 
 export default function Home() {
-  const [mode, setMode] = useState<OfferMode>("Rent Car");
-  const [condition, setCondition] = useState<CarCondition>("New Car");
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [freeTestDrive, setFreeTestDrive] = useState(false);
-  const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
-  const [query, setQuery] = useState("");
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [category, setCategory] = useState("Populer");
   const [sort, setSort] = useState("recommended");
   const [consignedCars, setConsignedCars] = useState<CarItem[]>([]);
 
   useEffect(() => {
+    const modeParam = new URLSearchParams(window.location.search).get("mode");
+    if (modeParam === "sewa" || modeParam === "beli" || modeParam === "bekas") {
+      setFilters((current) => ({ ...current, mode: modeParam }));
+    }
     fetch("/api/consignments")
       .then((response) => (response.ok ? response.json() : { cars: [] }))
-      .then((data) =>
-        setConsignedCars(Array.isArray(data.cars) ? data.cars : []),
-      )
+      .then((data) => setConsignedCars(Array.isArray(data.cars) ? data.cars : []))
       .catch(() => {});
   }, []);
 
-  const allCars = useMemo(
-    () => [...cars, ...consignedCars],
-    [consignedCars],
-  );
-
-  const allBrands = useMemo(
-    () => Array.from(new Set(allCars.map((car) => car.brand))),
-    [allCars],
-  );
+  const allCars = useMemo(() => [...cars, ...consignedCars], [consignedCars]);
 
   const filteredCars = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-
+    const priceOf = (car: CarItem) =>
+      filters.mode === "sewa" ? car.rentPrice : car.buyPrice;
     return allCars
-      .filter((car) => car.modes.includes(mode))
-      .filter((car) => car.condition === condition)
-      .filter((car) =>
-        selectedBrands.length === 0 ? true : selectedBrands.includes(car.brand)
-      )
-      .filter((car) => (freeTestDrive ? car.freeTestDrive : true))
-      .filter((car) => car.buyPrice <= maxPrice)
-      .filter((car) => {
-        if (!normalizedQuery) return true;
-        return [car.name, car.brand, car.type, car.location]
-          .join(" ")
-          .toLowerCase()
-          .includes(normalizedQuery);
-      })
+      .filter((car) => matchesFilters(car, filters, category))
       .sort((a, b) => {
-        if (sort === "price-low") return a.rentPrice - b.rentPrice;
-        if (sort === "price-high") return b.rentPrice - a.rentPrice;
+        if (sort === "price-low") return priceOf(a) - priceOf(b);
+        if (sort === "price-high") return priceOf(b) - priceOf(a);
         if (sort === "rating") return b.rating - a.rating;
         return b.trips + b.rating * 10 - (a.trips + a.rating * 10);
       });
-  }, [allCars, condition, freeTestDrive, maxPrice, mode, query, selectedBrands, sort]);
+  }, [allCars, category, filters, sort]);
 
-  function toggleBrand(brand: string) {
-    setSelectedBrands((current) =>
-      current.includes(brand)
-        ? current.filter((item) => item !== brand)
-        : [...current, brand]
-    );
+  function updateFilters(patch: Partial<Filters>) {
+    setFilters((current) => ({ ...current, ...patch }));
   }
 
-  function resetFilters() {
-    setCondition("New Car");
-    setSelectedBrands([]);
-    setFreeTestDrive(false);
-    setMaxPrice(MAX_PRICE);
-    setQuery("");
+  function scrollToCatalog() {
+    document.getElementById("katalog")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function resetAll() {
+    setFilters(defaultFilters);
+    setCategory("Populer");
     setSort("recommended");
   }
 
   return (
-    <main className="site-shell full-page">
-      <section className="app-window">
-        <TopBar />
-        <div className="workspace">
-          <aside className="filter-panel">
-            <div className="panel-heading">
-              <h2>Filter</h2>
-              <button className="link-button" onClick={resetFilters}>
-                Reset
-              </button>
-            </div>
+    <main className="landing" data-testid="landing-page">
+      <SiteHeader />
+      <Hero />
 
-            <label className="toggle-row">
-              <span className="toggle-label">
-                <ShieldCheck size={16} />
-                Test Drive Gratis
-              </span>
-              <input
-                checked={freeTestDrive}
-                onChange={(event) => setFreeTestDrive(event.target.checked)}
-                type="checkbox"
-              />
-            </label>
-
-            <div className="field-group">
-              <p>Kondisi Mobil</p>
-              <div className="segmented">
-                {conditions.map((item) => (
-                  <button
-                    className={condition === item ? "active" : ""}
-                    key={item}
-                    onClick={() => setCondition(item)}
-                  >
-                    {getConditionLabel(item)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="field-group">
-              <p>Brand</p>
-              {allBrands.map((brand) => (
-                <label className="check-row" key={brand}>
-                  <span>
-                    <span className="brand-mark">{brand.charAt(0)}</span>
-                    {brand}
-                  </span>
-                  <input
-                    checked={selectedBrands.includes(brand)}
-                    onChange={() => toggleBrand(brand)}
-                    type="checkbox"
-                  />
-                </label>
-              ))}
-              <button className="more-brand">
-                Merek Lain <ChevronDown size={14} />
-              </button>
-            </div>
-
-            <div className="field-group">
-              <p>Kisaran Harga</p>
-              <div className="histogram" aria-hidden="true">
-                {Array.from({ length: 24 }).map((_, index) => (
-                  <span
-                    key={index}
-                    style={{ height: `${18 + ((index * 13) % 34)}px` }}
-                  />
-                ))}
-              </div>
-              <input
-                aria-label="Maksimal harga beli"
-                className="range-input"
-                max={MAX_PRICE}
-                min={80000}
-                onChange={(event) => setMaxPrice(Number(event.target.value))}
-                step={5000}
-                type="range"
-                value={maxPrice}
-              />
-              <div className="price-boxes">
-                <strong>{formatBuyPrice(80000)}</strong>
-                <strong>{formatBuyPrice(maxPrice)}</strong>
-              </div>
-            </div>
-          </aside>
-
-          <section className="content-panel">
-            <div className="action-row">
-              <div className="rent-tabs">
-                {(["Buy Car", "Rent Car"] as OfferMode[]).map((item) => (
-                  <button
-                    className={mode === item ? "active" : ""}
-                    key={item}
-                    onClick={() => setMode(item)}
-                  >
-                    {getModeLabel(item)}
-                  </button>
-                ))}
-              </div>
-              <label className="search-box">
-                <Search size={18} />
-                <input
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Cari mobil di sini ..."
-                  value={query}
-                />
-              </label>
-              <button className="tool-button" onClick={resetFilters} title="Atur ulang filter">
-                <Settings2 size={18} />
-                <span>Reset</span>
-              </button>
-              <label className="sort-button">
-                <SlidersHorizontal size={16} />
-                <select value={sort} onChange={(event) => setSort(event.target.value)}>
-                  <option value="recommended">Rekomendasi</option>
-                  <option value="rating">Rating Tertinggi</option>
-                  <option value="price-low">Harga Sewa Terendah</option>
-                  <option value="price-high">Harga Sewa Tertinggi</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="results-head">
-              <h1>{filteredCars.length} Mobil Ditemukan</h1>
-              <div className="chips">
-                {freeTestDrive && (
-                  <button onClick={() => setFreeTestDrive(false)}>
-                    Test Drive Gratis
-                    <X size={14} />
-                  </button>
-                )}
-                <button
-                  onClick={() =>
-                    setCondition(condition === "New Car" ? "User Car" : "New Car")
-                  }
-                >
-                  {getConditionLabel(condition)}
-                  <X size={14} />
-                </button>
-                <button onClick={() => setMaxPrice(MAX_PRICE)}>
-                  Maks. {formatBuyPrice(maxPrice)}
-                  <X size={14} />
-                </button>
-                {selectedBrands.map((brand) => (
-                  <button key={brand} onClick={() => toggleBrand(brand)}>
-                    {brand}
-                    <X size={14} />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {filteredCars.length > 0 ? (
-              <div className="car-grid">
-                {filteredCars.map((item) => (
-                  <CarCard item={item} key={item.id} mode={mode} />
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <Car size={34} />
-                <h2>Mobil tidak ditemukan</h2>
-                <p>Ubah kata kunci, brand, atau range harga untuk melihat pilihan lain.</p>
-                <button onClick={resetFilters}>Reset Filter</button>
-              </div>
-            )}
-          </section>
-        </div>
-      </section>
-    </main>
-  );
-}
-
-function CarCard({ item, mode }: { item: CarItem; mode: OfferMode }) {
-  const priceLabel =
-    mode === "Buy Car" ? formatBuyPrice(item.buyPrice) : `${formatRupiah(item.rentPrice)} / hari`;
-
-  return (
-    <article className="car-card">
-      <button className="bookmark-button" title="Simpan mobil">
-        <Bookmark size={16} />
-      </button>
-      <Link href={`/cars/${item.id}`} className="card-link" aria-label={`Lihat detail ${item.name}`}>
-        <div className="card-title">
-          <div>
-            <h3>{item.name}</h3>
-            <p>{item.type} / {getConditionLabel(item.condition)}</p>
-          </div>
-        </div>
-        <div className="car-image-wrap">
-          <img src={item.image} alt={item.name} />
-        </div>
-        <div className="card-bottom">
-          <span className={`badge ${item.tagClass}`}>
-            {item.tagClass === "green" ? (
-              <Sparkles size={13} />
-            ) : item.tagClass === "rose" ? (
-              <Users size={13} />
-            ) : item.tagClass === "indigo" ? (
-              <Zap size={13} />
-            ) : (
-              <Gauge size={13} />
-            )}
-            {item.tag}
-          </span>
-          <div>
-            <span className="rating">
-              <Star size={13} fill="currentColor" />
-              {item.rating}
-            </span>
-            <strong>{priceLabel}</strong>
-          </div>
-        </div>
-      </Link>
-    </article>
-  );
-}
-
-function TopBar() {
-  return (
-    <header className="top-bar">
-      <button className="location-pill">
-        <MapPin size={16} />
-        Cilacap
-        <ChevronDown size={14} />
-      </button>
-      <Link href="/" className="brand">
-        <span>
-          <Car size={21} />
-        </span>
-        Mitra.Mobil
-      </Link>
-      <div className="top-actions">
-        <button className="icon-button" title="Pesan">
-          <MessageCircle size={18} />
-          <i />
-        </button>
-        <button className="icon-button" title="Notifikasi">
-          <Bell size={18} />
-          <i />
-        </button>
-        <button className="avatar-button" title="Profil">
-          <img
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=160&q=80"
-            alt="Profil pengguna"
-          />
-          <ChevronDown size={14} />
-        </button>
-        <Link href="/admin" className="admin-link">
-          <LayoutDashboard size={16} />
-          Admin
-        </Link>
-        <Link
-          href="/titip-mobil"
-          className="sell-button"
-          data-testid="titip-mobil-menu-link"
-        >
-          <Plus size={16} />
-          Titip Mobil
-        </Link>
+      <div className="landing-container search-wrap">
+        <SearchCard filters={filters} onChange={updateFilters} onSearch={scrollToCatalog} />
       </div>
-    </header>
+
+      <BrandStrip
+        active={filters.brand}
+        onSelect={(brand) => {
+          updateFilters({ brand });
+          scrollToCatalog();
+        }}
+      />
+
+      <section className="landing-container catalog" id="katalog" data-testid="catalog-section">
+        <div className="catalog-head">
+          <div>
+            <p className="section-eyebrow">Pilihan Untuk Anda</p>
+            <h2>
+              {modeTitles[filters.mode]}
+              {filters.brand ? ` · ${filters.brand}` : ""}
+            </h2>
+            <span className="catalog-copy">
+              Mobil-mobil favorit keluarga Indonesia. Pilih kategori, bandingkan
+              harga, dan pesan langsung dari halaman detail.
+            </span>
+          </div>
+          <div className="catalog-tools">
+            <label className="catalog-sort">
+              <select value={sort} onChange={(event) => setSort(event.target.value)} data-testid="sort-select">
+                <option value="recommended">Rekomendasi</option>
+                <option value="rating">Rating Tertinggi</option>
+                <option value="price-low">Harga Terendah</option>
+                <option value="price-high">Harga Tertinggi</option>
+              </select>
+            </label>
+            <button type="button" className="btn-ghost dark" onClick={resetAll} data-testid="reset-filters-button">
+              <RotateCcw size={15} />
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div className="category-tabs" data-testid="category-tabs">
+          {categories.map((item) => (
+            <button
+              type="button"
+              key={item}
+              className={category === item ? "active" : ""}
+              onClick={() => setCategory(item)}
+              data-testid={`category-tab-${item.toLowerCase()}`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        <p className="catalog-count" data-testid="catalog-count">
+          {filteredCars.length} mobil ditemukan
+        </p>
+
+        {filteredCars.length > 0 ? (
+          <div className="lp-grid" data-testid="car-grid">
+            {filteredCars.map((item) => (
+              <CarCard item={item} key={item.id} mode={filters.mode} />
+            ))}
+          </div>
+        ) : (
+          <div className="lp-empty" data-testid="empty-state">
+            <Car size={34} />
+            <h3>Mobil tidak ditemukan</h3>
+            <p>Ubah kata kunci, merek, kategori, atau batas harga untuk melihat pilihan lain.</p>
+            <button type="button" className="btn-primary" onClick={resetAll}>
+              Reset Filter
+            </button>
+          </div>
+        )}
+      </section>
+
+      <section className="landing-container consign-banner" data-testid="consign-banner">
+        <div>
+          <p className="section-eyebrow light">Punya mobil menganggur?</p>
+          <h2>Titipkan mobil Anda, biar kami yang pasarkan.</h2>
+          <span>
+            Titip sewa harian atau titip jual. Ajukan lewat form, tim admin
+            kami tinjau, lalu mobil Anda tampil di katalog ini.
+          </span>
+        </div>
+        <Link href="/titip-mobil" className="btn-primary" data-testid="banner-titip-link">
+          Mulai Titip Mobil
+          <ArrowRight size={17} />
+        </Link>
+      </section>
+
+      <SiteFooter />
+    </main>
   );
 }

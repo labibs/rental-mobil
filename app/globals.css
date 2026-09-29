@@ -1,11 +1,16 @@
 :root {
-  --ink: #111827;
-  --muted: #7a8294;
-  --line: #e8ecf3;
+  --ink: #151a1f;
+  --charcoal: #1e252c;
+  --muted: #6f7b85;
+  --line: #e3e9eb;
   --panel: #ffffff;
-  --soft: #f6f8fc;
-  --blue: #316cf6;
-  --blue-dark: #2457d6;
+  --soft: #f4f7f8;
+  --egg: #a8d5d8;
+  --egg-deep: #3e8f96;
+  --egg-dark: #2c6f75;
+  --egg-soft: #e9f4f5;
+  --blue: #3e8f96;
+  --blue-dark: #2c6f75;
   --green: #13a66f;
   --rose: #ef4d68;
   --orange: #ff9c45;
@@ -24,7 +29,7 @@ body {
 body {
   margin: 0;
   color: var(--ink);
-  background: #e9ecef;
+  background: #f4f7f8;
 }
 
 button,
@@ -123,7 +128,7 @@ img {
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  background: linear-gradient(135deg, #3b82f6, #184bd6);
+  background: linear-gradient(135deg, #a8d5d8, #3e8f96);
 }
 
 .top-actions {
@@ -286,7 +291,7 @@ input[type="checkbox"] {
 .rent-tabs .active {
   color: var(--blue);
   border-color: var(--blue);
-  background: #eef4ff;
+  background: #e9f4f5;
 }
 
 .check-row {
@@ -505,7 +510,7 @@ input[type="checkbox"] {
   color: var(--blue);
   border: 0;
   border-radius: 7px;
-  background: #f0f5ff;
+  background: #e9f4f5;
 }
 
 .card-title {
@@ -532,7 +537,7 @@ input[type="checkbox"] {
   color: var(--blue);
   border: 0;
   border-radius: 7px;
-  background: #f0f5ff;
+  background: #e9f4f5;
 }
 
 .range-input {
@@ -606,8 +611,8 @@ input[type="checkbox"] {
 }
 
 .badge.blue {
-  color: #1f65e8;
-  background: #eaf2ff;
+  color: #2c6f75;
+  background: #e9f4f5;
 }
 
 .badge.indigo {
@@ -684,7 +689,7 @@ input[type="checkbox"] {
 .admin-sidebar nav a.active,
 .admin-sidebar nav a:hover {
   color: #fff;
-  background: #2563eb;
+  background: #3e8f96;
 }
 
 .support-card {
@@ -694,7 +699,7 @@ input[type="checkbox"] {
   gap: 9px;
   border-radius: 8px;
   color: #fff;
-  background: linear-gradient(135deg, #214a9f, #13a66f);
+  background: linear-gradient(135deg, #2c6f75, #13a66f);
 }
 
 .support-card span {
@@ -809,8 +814,8 @@ input[type="checkbox"] {
 }
 
 .booking .stat-icon {
-  color: #1f65e8;
-  background: #eaf2ff;
+  color: #2c6f75;
+  background: #e9f4f5;
 }
 
 .fleet .stat-icon {
@@ -906,8 +911,8 @@ input[type="checkbox"] {
 
 .status.berjalan,
 .fleet-status.disewa {
-  color: #1f65e8;
-  background: #eaf2ff;
+  color: #2c6f75;
+  background: #e9f4f5;
 }
 
 .status.menunggu,
@@ -1083,19 +1088,24 @@ input[type="checkbox"] {
 }
 
 .detail-hero {
-  height: clamp(300px, 42vw, 520px);
+  height: clamp(240px, 42vw, 520px);
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #fff, #eaf0fa);
+  border-radius: 18px;
+  background: #eef2f3;
 }
 
 .detail-hero img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  mix-blend-mode: multiply;
+  object-fit: cover;
+}
+
+.page-back {
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 18px 26px 0;
 }
 
 .thumb-row {
@@ -1397,10 +1407,17 @@ input[type="checkbox"] {
   .car-grid,
   .stats-grid,
   .fleet-list article,
-  .detail-stats,
   .spec-grid,
   .date-grid {
     grid-template-columns: 1fr;
+  }
+
+  .detail-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .page-back {
+    padding: 14px 16px 0;
   }
 
   .admin-header {
@@ -1457,7 +1474,7 @@ input[type="checkbox"] {
 .admin-sidebar nav button.active,
 .admin-sidebar nav button:hover {
   color: #fff;
-  background: #2563eb;
+  background: #3e8f96;
 }
 
 .admin-logout {
@@ -1487,10 +1504,10 @@ input[type="checkbox"] {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #1f65e8;
-  border: 1px solid #bfd4ff;
+  color: #2c6f75;
+  border: 1px solid #b9dfe1;
   border-radius: 8px;
-  background: #edf4ff;
+  background: #e9f4f5;
   font-size: 14px;
   font-weight: 800;
 }
@@ -1578,7 +1595,7 @@ input[type="checkbox"] {
 .admin-modal select:focus,
 .admin-login-form input:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(62, 143, 150, 0.16);
 }
 
 .admin-login-shell {
@@ -1587,7 +1604,7 @@ input[type="checkbox"] {
   place-items: center;
   padding: 24px;
   background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.22), transparent 35%),
+    radial-gradient(circle at top left, rgba(62, 143, 150, 0.22), transparent 35%),
     #151820;
 }
 
@@ -1615,12 +1632,12 @@ input[type="checkbox"] {
   display: grid;
   place-items: center;
   border-radius: 9px;
-  background: #2563eb;
+  background: #3e8f96;
 }
 
 .admin-login-eyebrow {
   margin: 38px 0 7px;
-  color: #8eb6ff;
+  color: #a8d5d8;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -1659,12 +1676,12 @@ input[type="checkbox"] {
 }
 
 .admin-input:focus-within {
-  border-color: #6f9fff;
+  border-color: #a8d5d8;
 }
 
 .admin-input svg {
   flex: 0 0 auto;
-  color: #8eb6ff;
+  color: #a8d5d8;
 }
 
 .admin-input input {
@@ -1708,7 +1725,7 @@ input[type="checkbox"] {
 }
 
 .admin-login-hint code {
-  color: #cbdcff;
+  color: #d8ecee;
 }
 
 
@@ -1769,7 +1786,7 @@ input[type="checkbox"] {
 
 .consign-kind-grid button.active {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(62, 143, 150, 0.16);
 }
 
 .consign-kind-grid svg {
@@ -1846,7 +1863,7 @@ input[type="checkbox"] {
 .consign-form select:focus,
 .consign-form textarea:focus {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(62, 143, 150, 0.16);
 }
 
 .consign-photo {
@@ -1894,10 +1911,10 @@ input[type="checkbox"] {
   align-items: center;
   gap: 8px;
   padding: 12px 14px;
-  color: #1f65e8;
-  border: 1px solid #bfd4ff;
+  color: #2c6f75;
+  border: 1px solid #b9dfe1;
   border-radius: 8px;
-  background: #edf4ff;
+  background: #e9f4f5;
   font-size: 13px;
   font-weight: 800;
 }
@@ -2074,5 +2091,13 @@ input[type="checkbox"] {
 
   .consign-admin-list article {
     grid-template-columns: 64px 1fr;
+  }
+
+  .consign-admin-list article > :nth-child(n + 3) {
+    grid-column: 1 / -1;
+  }
+
+  .consign-price {
+    white-space: normal;
   }
 }

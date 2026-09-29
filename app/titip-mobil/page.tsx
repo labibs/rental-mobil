@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   ArrowRight,
   BadgeDollarSign,
-  Car,
   CheckCircle2,
   ImagePlus,
   KeyRound,
@@ -14,6 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { brands } from "../data/cars";
+import { SiteHeader } from "../components/site-header";
 
 type ConsignKind = "sewa" | "jual";
 
@@ -116,18 +116,13 @@ export default function TitipMobilPage() {
 
   return (
     <main className="detail-shell">
-      <header className="detail-topbar">
+      <SiteHeader />
+      <div className="page-back">
         <Link href="/" className="back-link" data-testid="back-to-catalog-link">
           <ArrowLeft size={18} />
           Kembali ke katalog
         </Link>
-        <Link href="/" className="brand dark">
-          <span>
-            <Car size={21} />
-          </span>
-          Mitra.Mobil
-        </Link>
-      </header>
+      </div>
 
       <section className="consign-shell">
         <div className="consign-hero">

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
-  Car,
   Fuel,
   Gauge,
   MapPin,
@@ -11,6 +10,7 @@ import {
   Users,
 } from "lucide-react";
 import { BookingForm } from "./booking-form";
+import { SiteHeader } from "../../components/site-header";
 import { cars, formatBuyPrice, type CarItem } from "../../data/cars";
 import { listConsignments } from "../../lib/consignment-store";
 import { consignmentToCarItem } from "../../lib/consignment-types";
@@ -41,18 +41,13 @@ export default async function CarDetailPage({
 
   return (
     <main className="detail-shell">
-      <header className="detail-topbar">
+      <SiteHeader />
+      <div className="page-back">
         <Link href="/" className="back-link">
           <ArrowLeft size={18} />
           Kembali ke katalog
         </Link>
-        <Link href="/" className="brand dark">
-          <span>
-            <Car size={21} />
-          </span>
-          Mitra.Mobil
-        </Link>
-      </header>
+      </div>
 
       <section className="detail-layout">
         <div className="detail-main">

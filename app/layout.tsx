@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import "./landing.css";
 
-const nunito = Nunito({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Mitra Mobil",
-  description: "Prototipe website rental dan jual beli mobil dalam Bahasa Indonesia",
+  title: "Mitra Mobil — Sewa, Jual Beli & Titip Mobil",
+  description:
+    "Rental, jual beli, dan titip mobil populer Indonesia: Toyota, Honda, Suzuki, Hyundai, BYD, Chery, Isuzu.",
 };
 
 export default function RootLayout({
@@ -19,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={nunito.className}>{children}</body>
+      <body className={jakarta.className}>{children}</body>
     </html>
   );
 }

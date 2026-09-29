@@ -25,8 +25,6 @@ export type Consignment = {
 export const DEFAULT_CONSIGNMENT_IMAGE =
   "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1100&q=80";
 
-const USD_TO_IDR = 16500;
-
 export function consignmentToCarItem(item: Consignment): CarItem {
   const isRent = item.kind === "sewa";
   const displayName = `${item.brand} ${item.name}`.replace(/\s+/g, " ").trim();
@@ -35,12 +33,12 @@ export function consignmentToCarItem(item: Consignment): CarItem {
     id: item.id,
     name: displayName,
     brand: item.brand,
-    type: `Tahun ${item.year}`,
+    type: "Titipan",
     condition: "User Car",
     modes: [isRent ? "Rent Car" : "Buy Car"],
     tag: isRent ? "Titip Sewa" : "Titip Jual",
     tagClass: isRent ? "blue" : "green",
-    buyPrice: isRent ? 0 : Math.round(item.price / USD_TO_IDR),
+    buyPrice: isRent ? 0 : item.price,
     rentPrice: isRent ? item.price : 0,
     rating: 5,
     trips: 0,
