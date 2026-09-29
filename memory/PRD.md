@@ -21,6 +21,7 @@ Web katalog rental/jual mobil (Next.js 15 prototype). Permintaan user (Sep 2026)
 - Halaman detail, titip mobil, admin memakai header baru; admin responsif di HP (nav horizontal scroll, header wrap, tanpa overflow).
 - Supervisor `frontend` diperbaiki: `yarn dev -p 3000 -H 0.0.0.0` di `/app`.
 - Testing agent iteration_2: semua 9 skenario lulus (desktop + mobile 390px).
+- (29 Sep 2026) Baris merek memakai logo resmi SVG self-hosted di `/app/public/brands/*.svg` (Toyota/Honda/Suzuki/Hyundai dari simple-icons; BYD/Chery dari Wikimedia Commons; Isuzu dari worldvectorlogo). Grayscale default, berwarna saat hover/aktif.
 
 ## Yang Sudah Diimplementasikan (25 Sep 2026)
 - Halaman `/titip-mobil`: pilihan Titip Sewa / Titip Jual + form lengkap (pemilik, WA, brand, tipe, tahun, transmisi, bahan bakar, plat, harga, lokasi, foto upload/URL, deskripsi) + panel sukses "menunggu persetujuan admin".
