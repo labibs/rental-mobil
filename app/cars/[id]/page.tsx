@@ -11,7 +11,9 @@ import {
 } from "lucide-react";
 import { BookingForm } from "./booking-form";
 import { SiteHeader } from "../../components/site-header";
-import { cars, formatBuyPrice, type CarItem } from "../../data/cars";
+import { CarGallery } from "../../components/car-gallery";
+import { ShareButton } from "../../components/share-button";
+import { cars, formatBuyPrice, formatRupiah, type CarItem } from "../../data/cars";
 import { listConsignments } from "../../lib/consignment-store";
 import { consignmentToCarItem } from "../../lib/consignment-types";
 
@@ -51,14 +53,7 @@ export default async function CarDetailPage({
 
       <section className="detail-layout">
         <div className="detail-main">
-          <div className="detail-hero">
-            <img src={car.image} alt={car.name} />
-          </div>
-          <div className="thumb-row">
-            {car.gallery.map((image) => (
-              <img src={image} alt={`Galeri ${car.name}`} key={image} />
-            ))}
-          </div>
+          <CarGallery images={car.gallery} name={car.name} />
 
           <section className="detail-card">
             <div className="detail-title">
@@ -68,7 +63,19 @@ export default async function CarDetailPage({
                 </p>
                 <h1>{car.name}</h1>
               </div>
-              <span className={`badge ${car.tagClass}`}>{car.tag}</span>
+              <div className="detail-title-actions">
+                <span className={`badge ${car.tagClass}`}>{car.tag}</span>
+                <ShareButton
+                  carId={car.id}
+                  name={car.name}
+                  priceLabel={
+                    car.modes.includes("Rent Car")
+                      ? `${formatRupiah(car.rentPrice)}/hari`
+                      : formatBuyPrice(car.buyPrice)
+                  }
+                  variant="full"
+                />
+              </div>
             </div>
             <p className="detail-description">{car.description}</p>
             <div className="detail-stats">

@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { formatRupiah } from "../data/cars";
 import type { Consignment } from "../lib/consignment-types";
+import { ownerStatusMessage, waLink } from "../lib/whatsapp";
 
 const stats = [
   {
@@ -160,8 +161,17 @@ export default function AdminPage() {
       if (!response.ok) return;
 
       const result = await response.json();
+      const updated = result.consignment as Consignment;
       setConsignments((current) =>
-        current.map((item) => (item.id === id ? result.consignment : item)),
+        current.map((item) => (item.id === id ? updated : item)),
+      );
+
+      const origin =
+        typeof window !== "undefined" ? window.location.origin : "";
+      window.open(
+        waLink(updated.whatsapp, ownerStatusMessage(updated, origin)),
+        "_blank",
+        "noopener",
       );
     } catch {
       // aksi bisa dicoba ulang oleh admin

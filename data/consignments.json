@@ -1,5 +1,48 @@
 [
   {
+    "id": "titip-mumij8wz-k2dxl",
+    "kind": "jual",
+    "ownerName": "Budi WA",
+    "whatsapp": "081234567890",
+    "brand": "Toyota",
+    "name": "Avanza WATest",
+    "year": 2022,
+    "transmission": "Manual",
+    "fuel": "Bensin",
+    "plate": "R 9999 ZZ",
+    "price": 180000000,
+    "location": "Cilacap",
+    "image": "https://example.com/x.jpg",
+    "gallery": [
+      "https://example.com/x.jpg"
+    ],
+    "description": "uji wa",
+    "status": "pending",
+    "createdAt": "2026-09-29T10:07:47.171Z"
+  },
+  {
+    "id": "titip-mumiiwl2-t78v1",
+    "kind": "sewa",
+    "ownerName": "Test Owner",
+    "whatsapp": "082177826596",
+    "brand": "Honda",
+    "name": "CRV Test",
+    "year": 2023,
+    "transmission": "Otomatis",
+    "fuel": "Hybrid",
+    "plate": "R 1234 XX",
+    "price": 500000,
+    "location": "Cilacap",
+    "image": "https://example.com/a.jpg",
+    "gallery": [
+      "https://example.com/a.jpg",
+      "https://example.com/b.jpg"
+    ],
+    "description": "uji",
+    "status": "approved",
+    "createdAt": "2026-09-29T10:07:31.191Z"
+  },
+  {
     "id": "titip-mumgx3rq-2ev8s",
     "kind": "jual",
     "ownerName": "UI Tester",

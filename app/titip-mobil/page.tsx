@@ -11,11 +11,14 @@ import {
   KeyRound,
   Loader2,
   ShieldCheck,
+  X,
 } from "lucide-react";
 import { brands } from "../data/cars";
 import { SiteHeader } from "../components/site-header";
 
 type ConsignKind = "sewa" | "jual";
+
+const MAX_PHOTOS = 6;
 
 const initialForm = {
   ownerName: "",
@@ -35,47 +38,77 @@ const initialForm = {
 export default function TitipMobilPage() {
   const [kind, setKind] = useState<ConsignKind>("sewa");
   const [form, setForm] = useState(initialForm);
-  const [photoPreview, setPhotoPreview] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [uploadingCount, setUploadingCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isUploading = uploadingCount > 0;
 
   function update(key: keyof typeof initialForm, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
-  async function handlePhotoChange(file: File | null) {
-    if (!file) return;
+  async function uploadOne(file: File) {
+    const data = new FormData();
+    data.append("photo", file);
+    const response = await fetch("/api/consignments/upload", {
+      method: "POST",
+      body: data,
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new Error(result?.message || "Upload foto gagal.");
+    }
+    return result.url as string;
+  }
+
+  async function handlePhotoChange(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) {
+      setError(`Maksimal ${MAX_PHOTOS} foto.`);
+      return;
+    }
+    const selected = Array.from(files).slice(0, remaining);
 
     setError("");
-    setIsUploading(true);
+    setUploadingCount(selected.length);
 
-    try {
-      const data = new FormData();
-      data.append("photo", file);
-      const response = await fetch("/api/consignments/upload", {
-        method: "POST",
-        body: data,
-      });
-      const result = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Upload foto gagal.");
+    for (const file of selected) {
+      try {
+        const url = await uploadOne(file);
+        setPhotos((current) =>
+          current.length < MAX_PHOTOS ? [...current, url] : current,
+        );
+      } catch (uploadError) {
+        setError(
+          uploadError instanceof Error
+            ? uploadError.message
+            : "Upload foto gagal.",
+        );
+      } finally {
+        setUploadingCount((current) => Math.max(0, current - 1));
       }
-
-      update("imageUrl", result.url);
-      setPhotoPreview(result.url);
-    } catch (uploadError) {
-      setError(
-        uploadError instanceof Error
-          ? uploadError.message
-          : "Upload foto gagal.",
-      );
-    } finally {
-      setIsUploading(false);
     }
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function addPhotoUrl() {
+    const url = form.imageUrl.trim();
+    if (!url) return;
+    if (photos.length >= MAX_PHOTOS) {
+      setError(`Maksimal ${MAX_PHOTOS} foto.`);
+      return;
+    }
+    setPhotos((current) => [...current, url]);
+    update("imageUrl", "");
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((current) => current.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -84,10 +117,13 @@ export default function TitipMobilPage() {
     setIsSubmitting(true);
 
     try {
+      const gallery = form.imageUrl.trim()
+        ? [...photos, form.imageUrl.trim()]
+        : photos;
       const response = await fetch("/api/consignments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, kind }),
+        body: JSON.stringify({ ...form, imageUrl: gallery[0] || "", gallery, kind }),
       });
       const result = await response.json().catch(() => null);
 
@@ -109,7 +145,7 @@ export default function TitipMobilPage() {
 
   function resetAll() {
     setForm(initialForm);
-    setPhotoPreview("");
+    setPhotos([]);
     setError("");
     setSubmitted(false);
   }
@@ -320,47 +356,89 @@ export default function TitipMobilPage() {
 
             <div className="consign-section">
               <h2>Foto &amp; Deskripsi</h2>
-              <div className="consign-photo">
-                <button
-                  type="button"
-                  className="consign-upload"
-                  onClick={() => fileInputRef.current?.click()}
-                  data-testid="photo-upload-button"
-                >
-                  {photoPreview ? (
-                    <img src={photoPreview} alt="Foto mobil" />
-                  ) : (
-                    <>
+              <p className="consign-hint" data-testid="photo-hint">
+                Unggah hingga {MAX_PHOTOS} foto (depan, samping, belakang,
+                interior). Foto pertama jadi foto utama di katalog.
+              </p>
+              <div className="consign-photo-grid" data-testid="photo-grid">
+                {photos.map((url, index) => (
+                  <div
+                    className="consign-photo-item"
+                    key={`${url}-${index}`}
+                    data-testid={`photo-item-${index}`}
+                  >
+                    <img src={url} alt={`Foto mobil ${index + 1}`} />
+                    {index === 0 && <span className="photo-main">Utama</span>}
+                    <button
+                      type="button"
+                      aria-label="Hapus foto"
+                      onClick={() => removePhoto(index)}
+                      data-testid={`remove-photo-${index}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+                {photos.length < MAX_PHOTOS && (
+                  <button
+                    type="button"
+                    className="consign-upload"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    data-testid="photo-upload-button"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="spin" size={22} />
+                    ) : (
                       <ImagePlus size={22} />
-                      <span>
-                        {isUploading ? "Mengunggah..." : "Upload foto mobil"}
-                      </span>
-                    </>
-                  )}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  hidden
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  onChange={(event) =>
-                    handlePhotoChange(event.target.files?.[0] ?? null)
-                  }
-                  data-testid="photo-file-input"
-                />
-                <label>
-                  Atau tempel URL foto
+                    )}
+                    <span>
+                      {isUploading
+                        ? `Mengunggah ${uploadingCount} foto...`
+                        : photos.length === 0
+                          ? "Upload foto mobil"
+                          : "Tambah foto"}
+                    </span>
+                    <small>
+                      {photos.length}/{MAX_PHOTOS}
+                    </small>
+                  </button>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                hidden
+                multiple
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(event) => handlePhotoChange(event.target.files)}
+                data-testid="photo-file-input"
+              />
+              <label>
+                Atau tempel URL foto
+                <div className="consign-url-row">
                   <input
                     value={form.imageUrl}
-                    onChange={(event) => {
-                      update("imageUrl", event.target.value);
-                      setPhotoPreview(event.target.value);
+                    onChange={(event) => update("imageUrl", event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addPhotoUrl();
+                      }
                     }}
                     placeholder="https://contoh.com/foto-mobil.jpg"
                     data-testid="input-image-url"
                   />
-                </label>
-              </div>
+                  <button
+                    type="button"
+                    onClick={addPhotoUrl}
+                    disabled={!form.imageUrl.trim()}
+                    data-testid="add-photo-url-button"
+                  >
+                    Tambah
+                  </button>
+                </div>
+              </label>
               <label>
                 Deskripsi singkat
                 <textarea

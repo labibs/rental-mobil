@@ -30,10 +30,15 @@ export function SiteFooter() {
             <MapPin size={15} />
             Jl. Gatot Subroto No. 88, Cilacap
           </span>
-          <span>
+          <a
+            href="https://wa.me/6282177826596"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="footer-whatsapp-link"
+          >
             <Phone size={15} />
-            0812-3456-7890
-          </span>
+            0821-7782-6596
+          </a>
           <span>
             <MessageCircle size={15} />
             WhatsApp 08.00 – 21.00 WIB

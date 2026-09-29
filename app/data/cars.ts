@@ -58,7 +58,7 @@ const IMG = {
 };
 
 export const HERO_IMAGE =
-  "https://static.prod-images.emergentagent.com/jobs/3b0cea51-70e1-4a1f-b967-0d40292c2629/images/a1c01e0a93fcf7b3b3c558057aadad46f33b1e5f221ebf67583f33a53f656cc2.jpeg";
+  "https://static.prod-images.emergentagent.com/jobs/3b0cea51-70e1-4a1f-b967-0d40292c2629/images/4df2bdeccd0a05e4693df37680859b8fa9f4e0d0ba38fc90432209e08be96956.jpeg";
 
 export const cars: CarItem[] = [
   {

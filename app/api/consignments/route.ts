@@ -43,6 +43,12 @@ export async function POST(request: Request) {
   const location = asString(body.location);
   const description = asString(body.description);
   const imageUrl = asString(body.imageUrl);
+  const gallery = Array.isArray(body.gallery)
+    ? body.gallery
+        .map(asString)
+        .filter((url) => url.startsWith("http") || url.startsWith("/api/"))
+        .slice(0, 6)
+    : [];
   const year = Number(body.year);
   const price = Number(body.price);
 
@@ -80,7 +86,8 @@ export async function POST(request: Request) {
     plate,
     price: Math.round(price),
     location,
-    image: imageUrl || DEFAULT_CONSIGNMENT_IMAGE,
+    image: gallery[0] || imageUrl || DEFAULT_CONSIGNMENT_IMAGE,
+    gallery: gallery.length > 0 ? gallery : imageUrl ? [imageUrl] : [],
     description,
     status: "pending",
     createdAt: new Date().toISOString(),

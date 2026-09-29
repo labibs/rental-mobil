@@ -17,6 +17,7 @@ export type Consignment = {
   price: number;
   location: string;
   image: string;
+  gallery?: string[];
   description: string;
   status: ConsignmentStatus;
   createdAt: string;
@@ -48,7 +49,7 @@ export function consignmentToCarItem(item: Consignment): CarItem {
     location: item.location,
     freeTestDrive: false,
     image: item.image,
-    gallery: [item.image],
+    gallery: item.gallery && item.gallery.length > 0 ? item.gallery : [item.image],
     description:
       item.description ||
       `${displayName} titipan dari ${item.ownerName}, berlokasi di ${item.location}.`,
