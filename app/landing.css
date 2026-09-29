@@ -1184,3 +1184,93 @@
 .brand-strip-inner button[data-brand="Isuzu"] .brand-logo {
   height: 42px;
 }
+
+/* ===== Floating WhatsApp button ===== */
+.wa-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 58px;
+  padding: 0 20px 0 16px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 14px 34px rgba(37, 211, 102, 0.42);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.wa-fab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.55);
+  animation: waPulse 2.4s ease-out infinite;
+}
+
+.wa-fab:hover {
+  transform: translateY(-2px);
+  background: #1eb955;
+  box-shadow: 0 18px 40px rgba(37, 211, 102, 0.5);
+}
+
+.wa-fab-label {
+  white-space: nowrap;
+}
+
+@keyframes waPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@media (max-width: 860px) {
+  /* Kategori tetap terlihat saat scroll katalog di mobile */
+  .category-tabs {
+    position: sticky;
+    top: 72px;
+    z-index: 20;
+    margin: 0 -16px;
+    padding: 12px 16px;
+    background: var(--soft);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Alat sort & reset menempel tepat di atas kategori */
+  .catalog-tools {
+    position: sticky;
+    top: 72px;
+    z-index: 21;
+    margin: 0 -16px;
+    padding: 10px 16px 0;
+    background: var(--soft);
+  }
+
+  .category-tabs {
+    top: 132px;
+  }
+
+  .wa-fab {
+    right: 16px;
+    bottom: 16px;
+    height: 54px;
+    padding: 0 18px;
+  }
+
+  .wa-fab-label {
+    display: none;
+  }
+}
+

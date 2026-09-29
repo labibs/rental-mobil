@@ -10,6 +10,7 @@ import { SearchCard } from "./components/search-card";
 import { BrandStrip } from "./components/brand-strip";
 import { CarCard } from "./components/car-card";
 import { SiteFooter } from "./components/site-footer";
+import { WhatsappFab } from "./components/whatsapp-fab";
 import {
   defaultFilters,
   matchesFilters,
@@ -169,6 +170,7 @@ export default function Home() {
       </section>
 
       <SiteFooter />
+      <WhatsappFab />
     </main>
   );
 }

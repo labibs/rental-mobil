@@ -19,10 +19,12 @@ import {
   LogOut,
   MapPin,
   MoreHorizontal,
+  Pencil,
   Plus,
   Search,
   Settings,
   ShieldCheck,
+  Trash2,
   UserRound,
   Users,
   Wrench,
@@ -98,6 +100,9 @@ export default function AdminPage() {
     plate: "",
   });
   const [consignments, setConsignments] = useState<Consignment[]>([]);
+  const [editing, setEditing] = useState<Consignment | null>(null);
+  const [editError, setEditError] = useState("");
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/consignments")
@@ -175,6 +180,66 @@ export default function AdminPage() {
       );
     } catch {
       // aksi bisa dicoba ulang oleh admin
+    }
+  }
+
+  async function handleConsignmentDelete(id: string) {
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm("Hapus pengajuan titip mobil ini secara permanen?")
+    ) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/admin/consignments/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) return;
+      setConsignments((current) => current.filter((item) => item.id !== id));
+    } catch {
+      // admin bisa mencoba lagi
+    }
+  }
+
+  async function handleEditSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editing) return;
+    setEditError("");
+    setIsSavingEdit(true);
+    try {
+      const response = await fetch(`/api/admin/consignments/${editing.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: editing.kind,
+          ownerName: editing.ownerName,
+          whatsapp: editing.whatsapp,
+          brand: editing.brand,
+          name: editing.name,
+          year: editing.year,
+          transmission: editing.transmission,
+          fuel: editing.fuel,
+          plate: editing.plate,
+          price: editing.price,
+          location: editing.location,
+          description: editing.description,
+        }),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(result?.message || "Gagal menyimpan perubahan.");
+      }
+      const updated = result.consignment as Consignment;
+      setConsignments((current) =>
+        current.map((item) => (item.id === updated.id ? updated : item)),
+      );
+      setEditing(null);
+    } catch (error) {
+      setEditError(
+        error instanceof Error ? error.message : "Gagal menyimpan perubahan.",
+      );
+    } finally {
+      setIsSavingEdit(false);
     }
   }
 
@@ -557,34 +622,55 @@ export default function AdminPage() {
                           ? "Disetujui"
                           : "Ditolak"}
                     </span>
-                    {item.status === "pending" ? (
-                      <div className="consign-actions">
-                        <button
-                          type="button"
-                          className="approve"
-                          onClick={() =>
-                            handleConsignmentAction(item.id, "approve")
-                          }
-                          data-testid={`approve-${item.id}`}
-                        >
-                          <CheckCircle2 size={15} />
-                          Setujui
-                        </button>
-                        <button
-                          type="button"
-                          className="reject"
-                          onClick={() =>
-                            handleConsignmentAction(item.id, "reject")
-                          }
-                          data-testid={`reject-${item.id}`}
-                        >
-                          <XCircle size={15} />
-                          Tolak
-                        </button>
-                      </div>
-                    ) : (
-                      <span />
-                    )}
+                    <div className="consign-actions">
+                      {item.status === "pending" && (
+                        <>
+                          <button
+                            type="button"
+                            className="approve"
+                            onClick={() =>
+                              handleConsignmentAction(item.id, "approve")
+                            }
+                            data-testid={`approve-${item.id}`}
+                          >
+                            <CheckCircle2 size={15} />
+                            Setujui
+                          </button>
+                          <button
+                            type="button"
+                            className="reject"
+                            onClick={() =>
+                              handleConsignmentAction(item.id, "reject")
+                            }
+                            data-testid={`reject-${item.id}`}
+                          >
+                            <XCircle size={15} />
+                            Tolak
+                          </button>
+                        </>
+                      )}
+                      <button
+                        type="button"
+                        className="edit"
+                        onClick={() => {
+                          setEditError("");
+                          setEditing(item);
+                        }}
+                        data-testid={`edit-${item.id}`}
+                      >
+                        <Pencil size={15} />
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="delete"
+                        onClick={() => handleConsignmentDelete(item.id)}
+                        data-testid={`delete-${item.id}`}
+                      >
+                        <Trash2 size={15} />
+                        Hapus
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -679,6 +765,199 @@ export default function AdminPage() {
               <button type="submit" className="primary-admin-button">
                 <Plus size={17} />
                 Simpan Unit
+              </button>
+            </form>
+          </div>
+        )}
+        {editing && (
+          <div
+            className="admin-modal-backdrop"
+            role="presentation"
+            onClick={() => setEditing(null)}
+          >
+            <form
+              className="admin-modal edit-consign-modal"
+              onSubmit={handleEditSubmit}
+              onClick={(event) => event.stopPropagation()}
+              data-testid="edit-consign-modal"
+            >
+              <div className="section-title">
+                <div>
+                  <p>Titip Mobil</p>
+                  <h2>Edit Pengajuan</h2>
+                </div>
+                <button
+                  type="button"
+                  className="icon-button light"
+                  onClick={() => setEditing(null)}
+                  aria-label="Tutup formulir"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="edit-grid">
+                <label>
+                  Jenis
+                  <select
+                    value={editing.kind}
+                    onChange={(event) =>
+                      setEditing({
+                        ...editing,
+                        kind: event.target.value as Consignment["kind"],
+                      })
+                    }
+                    data-testid="edit-kind"
+                  >
+                    <option value="sewa">Titip Sewa</option>
+                    <option value="jual">Titip Jual</option>
+                  </select>
+                </label>
+                <label>
+                  Nama pemilik
+                  <input
+                    value={editing.ownerName}
+                    onChange={(event) =>
+                      setEditing({ ...editing, ownerName: event.target.value })
+                    }
+                    data-testid="edit-owner-name"
+                  />
+                </label>
+                <label>
+                  WhatsApp
+                  <input
+                    value={editing.whatsapp}
+                    onChange={(event) =>
+                      setEditing({ ...editing, whatsapp: event.target.value })
+                    }
+                    data-testid="edit-whatsapp"
+                  />
+                </label>
+                <label>
+                  Brand
+                  <input
+                    value={editing.brand}
+                    onChange={(event) =>
+                      setEditing({ ...editing, brand: event.target.value })
+                    }
+                    data-testid="edit-brand"
+                  />
+                </label>
+                <label>
+                  Nama / tipe
+                  <input
+                    value={editing.name}
+                    onChange={(event) =>
+                      setEditing({ ...editing, name: event.target.value })
+                    }
+                    data-testid="edit-name"
+                  />
+                </label>
+                <label>
+                  Tahun
+                  <input
+                    type="number"
+                    value={editing.year}
+                    onChange={(event) =>
+                      setEditing({
+                        ...editing,
+                        year: Number(event.target.value),
+                      })
+                    }
+                    data-testid="edit-year"
+                  />
+                </label>
+                <label>
+                  Transmisi
+                  <select
+                    value={editing.transmission}
+                    onChange={(event) =>
+                      setEditing({
+                        ...editing,
+                        transmission: event.target.value,
+                      })
+                    }
+                    data-testid="edit-transmission"
+                  >
+                    <option>Otomatis</option>
+                    <option>Manual</option>
+                  </select>
+                </label>
+                <label>
+                  Bahan bakar
+                  <select
+                    value={editing.fuel}
+                    onChange={(event) =>
+                      setEditing({ ...editing, fuel: event.target.value })
+                    }
+                    data-testid="edit-fuel"
+                  >
+                    <option>Bensin</option>
+                    <option>Diesel</option>
+                    <option>Hybrid</option>
+                    <option>Listrik</option>
+                  </select>
+                </label>
+                <label>
+                  Plat nomor
+                  <input
+                    value={editing.plate}
+                    onChange={(event) =>
+                      setEditing({ ...editing, plate: event.target.value })
+                    }
+                    data-testid="edit-plate"
+                  />
+                </label>
+                <label>
+                  {editing.kind === "sewa"
+                    ? "Harga sewa /hari (Rp)"
+                    : "Harga jual (Rp)"}
+                  <input
+                    type="number"
+                    value={editing.price}
+                    onChange={(event) =>
+                      setEditing({
+                        ...editing,
+                        price: Number(event.target.value),
+                      })
+                    }
+                    data-testid="edit-price"
+                  />
+                </label>
+                <label>
+                  Lokasi
+                  <input
+                    value={editing.location}
+                    onChange={(event) =>
+                      setEditing({ ...editing, location: event.target.value })
+                    }
+                    data-testid="edit-location"
+                  />
+                </label>
+              </div>
+              <label>
+                Deskripsi
+                <textarea
+                  rows={3}
+                  value={editing.description}
+                  onChange={(event) =>
+                    setEditing({ ...editing, description: event.target.value })
+                  }
+                  data-testid="edit-description"
+                />
+              </label>
+              {editError && (
+                <p className="consign-error" data-testid="edit-error">
+                  {editError}
+                </p>
+              )}
+              <button
+                type="submit"
+                className="primary-admin-button"
+                disabled={isSavingEdit}
+                data-testid="edit-save-button"
+              >
+                <CheckCircle2 size={17} />
+                {isSavingEdit ? "Menyimpan..." : "Simpan Perubahan"}
               </button>
             </form>
           </div>

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { brands } from "../data/cars";
 import { SiteHeader } from "../components/site-header";
+import { WhatsappFab } from "../components/whatsapp-fab";
 
 type ConsignKind = "sewa" | "jual";
 
@@ -481,6 +482,7 @@ export default function TitipMobilPage() {
           </form>
         )}
       </section>
+      <WhatsappFab />
     </main>
   );
 }

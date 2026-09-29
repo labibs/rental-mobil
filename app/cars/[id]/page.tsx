@@ -13,6 +13,7 @@ import { BookingForm } from "./booking-form";
 import { SiteHeader } from "../../components/site-header";
 import { CarGallery } from "../../components/car-gallery";
 import { ShareButton } from "../../components/share-button";
+import { WhatsappFab } from "../../components/whatsapp-fab";
 import { cars, formatBuyPrice, formatRupiah, type CarItem } from "../../data/cars";
 import { listConsignments } from "../../lib/consignment-store";
 import { consignmentToCarItem } from "../../lib/consignment-types";
@@ -126,6 +127,7 @@ export default async function CarDetailPage({
           <BookingForm car={car} />
         </aside>
       </section>
+      <WhatsappFab />
     </main>
   );
 }
