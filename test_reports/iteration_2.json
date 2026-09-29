@@ -1,0 +1,37 @@
+{
+  "summary": "Full frontend E2E validation of the redesigned Mitra.Mobil landing (DriveX-style), catalog filters, mobile responsiveness, detail page, admin panel and consignment lifecycle (submit jual -> UI approve -> visible in Bekas/Populer, NOT in Beli). All 9 items from the review request validated on desktop (1920x1080) and mobile (390x844). No bugs found.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "/app/app/admin/page.tsx is 680+ lines; consider splitting into (Dashboard, Booking, Armada, Titip Mobil) subcomponents to improve maintainability.",
+    "consignmentToCarItem() in /app/app/lib/consignment-types.ts hardcodes seats:5 and rating:5 for every titipan; add these fields to Consignment schema so real values are shown.",
+    "search-fields wrapper has no data-testid (only className='search-fields expanded'). Add data-testid='search-fields' to make the mobile-filter-collapse test target stable.",
+    "Prototype storage is a JSON file /app/data/consignments.json — not concurrency-safe. Add a file lock or move to MongoDB before production.",
+    "GET /api/consignments is called on every home page render; add ISR/cache headers or Next.js revalidate to reduce disk I/O.",
+    "Public GET /api/consignments returns full owner phone (whatsapp) and plate — consider redacting sensitive fields for anonymous callers."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "n/a (frontend-only test scope)", "frontend": "100%" },
+  "test_credentials": "admin@autohunt.local / admin123 (from /app/.env, verified working)",
+  "seed_data_creation": "Two new consignments submitted via UI and approved via admin UI: titip-mumgu4tn-hod2i (Toyota TESTJUAL-73614, jual, 165jt, APPROVED) and titip-mumgx3rq-2ev8s (Honda UITEST-73749, jual, 180jt, APPROVED). Pre-existing test data preserved: titip-muhm9g1o-057ny (sewa APPROVED), titip-muhm4t2y-kusum (sewa APPROVED), titip-muhm4t6z-lcyv6 (jual REJECTED).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "App runs via supervisor 'frontend' on port 3000 (Next.js dev). No separate backend. Test at http://localhost:3000 directly. Admin login: admin@autohunt.local/admin123. Consignments persist in /app/data/consignments.json. Approved jual consignments appear only under mode-tab-bekas (and category-tab-populer/bekas), NOT under mode-tab-beli. Approved sewa consignments appear under mode-tab-sewa. Buy price for consignments is stored/displayed as raw Rupiah (formatShortRupiah 'Rp 165 jt') with no conversion. Bekas count = 3 static cars (Alphard, CR-V, Panther) + approved jual consignments. Beli count = 14 New Car static cars only. Sewa count = 17 static + approved sewa consignments (currently 4 approved sewa titipan available). Detailed test results captured; playwright ran against http://localhost:3000. Mobile viewport 390x844 verified no horizontal overflow on /, /titip-mobil, /cars/*, /admin/login (admin dashboard mobile has sidebar off-canvas; body width still <=390).",
+  "detailed_test_results": {
+    "landing_testids_present": ["site-header", "nav-home", "nav-sewa", "nav-beli", "nav-titip", "nav-admin", "titip-mobil-menu-link", "hero-section", "hero-explore-button", "hero-titip-button", "hero-stats", "search-card", "brand-strip", "catalog-section", "consign-banner", "site-footer", "catalog-count", "sort-select", "reset-filters-button"],
+    "catalog_counts": {"sewa": "19 mobil ditemukan (17 static + 2 approved sewa consignments)", "beli": "14 mobil ditemukan (New Car cars)", "bekas": "3 static + approved jual consignments"},
+    "prices_verified": {"avanza_sewa": "Rp 350.000", "avanza_beli": "Rp 255 jt", "fortuner_detail": "Rp 1.100.000/hari", "approved_jual_TESTJUAL_165jt": "Rp 165 jt (raw rupiah, no conversion)"},
+    "filters": {"search_fortuner": "1 result", "price_<=400rb_sewa": "6 cars (avanza,brio,ertiga,panther + 2 titipan)", "brand_chip_toyota_toggle": "5 -> 19", "category_listrik": "atto3, ioniq5, seal", "sort_price_low_first": "honda-brio (cheapest rent 275k)"},
+    "navigation": {"unknown_car_detail": "HTTP 404", "?mode=beli_activates_beli_tab": true},
+    "mobile_390": {"mobile_menu_button_visible": true, "desktop_cta_hidden": true, "hamburger_toggles_nav_open_class": true, "titip-mobil-menu-link-mobile_visible_when_open": true, "filter-toggle-button_visible": true, "search_fields_gets_expanded_class": true, "1_column_grid": true, "horizontal_overflow_on_/,/titip-mobil,/cars/toyota-avanza,/admin/login": "none (scrollWidth<=390)"},
+    "e2e_consignment_flow": {"submit_jual_via_UI": "OK (consign-success shown)", "admin_login": "OK (cookie set)", "consign-pending-badge_shown": "1", "UI_approve_click_updates_status_to_Disetujui": true, "appears_in_mode-tab-bekas": true, "appears_in_category-tab-populer_under_bekas": true, "NOT_in_mode-tab-beli": true, "buy_price_matches_submitted_rupiah": "Rp 165 jt for 165000000, Rp 180 jt for 180000000"},
+    "console_errors": "none (only benign 404 for /cars/nonexistent-xyz detail as expected)"
+  },
+  "rca of the issue": "No issues found."
+}
