@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Car, LayoutDashboard, Menu, Plus, X } from "lucide-react";
 
 const navLinks = [
@@ -13,9 +13,31 @@ const navLinks = [
 
 export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
   const [open, setOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show header when scrolling up
+      if (currentScrollY < lastScrollY) {
+        setIsHidden(false);
+      } 
+      // Hide header when scrolling down (only on mobile)
+      else if (currentScrollY > lastScrollY && currentScrollY > 100 && window.innerWidth <= 640) {
+        setIsHidden(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
-    <header className={`site-header ${tone}`} data-testid="site-header">
+    <header className={`site-header ${tone} ${isHidden ? "hidden" : ""}`} data-testid="site-header">
       <div className="site-header-inner">
         <Link href="/" className="site-brand" data-testid="site-brand">
           <span>
