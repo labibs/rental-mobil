@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "0d92cda1a541f9c443fdf86aa464e226",
-    "previewModeSigningKey": "f8f59839b4e75c34887da630859ad221b4b8f4daedf425e6bd4c349e35e61966",
-    "previewModeEncryptionKey": "be918c7f5e5079c4dafe0ee39264d3a5086ff1b8900ef305b79787c07b5f1039"
-  }
-}
+{"version":4,"routes":{"/cars/toyota-avanza":{},"/cars/toyota-innova-zenix":{},"/cars/toyota-fortuner":{},"/cars/toyota-alphard":{},"/cars/honda-brio":{},"/cars/honda-hrv":{},"/cars/honda-crv":{},"/cars/suzuki-ertiga":{},"/cars/suzuki-xl7":{},"/cars/hyundai-creta":{},"/cars/hyundai-ioniq-5":{},"/cars/byd-atto-3":{},"/cars/byd-seal":{},"/cars/chery-omoda-5":{},"/cars/chery-tiggo-8":{},"/cars/isuzu-panther":{},"/cars/isuzu-mux":{}},"dynamicRoutes":{"/cars/[id]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/cars/[id]","routeRegex":"^\\/cars\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"956020747ac8af247dae81849035c93d","previewModeSigningKey":"9370ad7733428eaf18a7618aebcc575177233c295df7ab6f94e47dbe85bdf491","previewModeEncryptionKey":"ebee248db86df6a7aae86ef5f6ff6ed57b80a15f73b4ce47421171fdb567c1db"}}

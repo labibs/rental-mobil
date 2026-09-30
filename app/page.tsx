@@ -89,7 +89,7 @@ export default function Home() {
         }}
       />
 
-      <section className="landing-container catalog" id="katalog" data-testid="catalog-section">
+      <section className="landing-container catalog " id="katalog" data-testid="catalog-section">
         <div className="catalog-head">
           <div>
             <p className="section-eyebrow">Pilihan Untuk Anda</p>
@@ -118,7 +118,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="category-tabs" data-testid="category-tabs">
+        {/*<div className="category-tabs" data-testid="category-tabs">
           {categories.map((item) => (
             <button
               type="button"
@@ -130,7 +130,7 @@ export default function Home() {
               {item}
             </button>
           ))}
-        </div>
+        </div>*/}
 
         <p className="catalog-count" data-testid="catalog-count">
           {filteredCars.length} mobil ditemukan
@@ -154,7 +154,7 @@ export default function Home() {
         )}
       </section>
 
-      <section className="landing-container consign-banner" data-testid="consign-banner">
+      <section className="landing-container consign-banner p-2" data-testid="consign-banner">
         <div>
           <p className="section-eyebrow light">Punya mobil menganggur?</p>
           <h2>Titipkan mobil Anda, biar kami yang pasarkan.</h2>

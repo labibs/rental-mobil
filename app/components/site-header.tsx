@@ -19,16 +19,16 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Show header when scrolling up
       if (currentScrollY < lastScrollY) {
         setIsHidden(false);
-      } 
+      }
       // Hide header when scrolling down (only on mobile)
       else if (currentScrollY > lastScrollY && currentScrollY > 100 && window.innerWidth <= 640) {
         setIsHidden(true);
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
@@ -37,7 +37,7 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
   }, [lastScrollY]);
 
   return (
-    <header className={`site-header ${tone} ${isHidden ? "hidden" : ""}`} data-testid="site-header">
+    <header className={`site-header ${tone} `} data-testid="site-header">
       <div className="site-header-inner">
         <Link href="/" className="site-brand" data-testid="site-brand">
           <span>
