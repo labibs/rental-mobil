@@ -53,8 +53,8 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
               src="/logo-mitra.mobil.png"
               alt="Mitra.Mobil"
               className="site-brand-logo"
-              width={320}
-              height={64}
+              width={350}
+              height={74}
             />
           </Link>
 

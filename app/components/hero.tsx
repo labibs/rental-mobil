@@ -45,10 +45,7 @@ export function Hero() {
           ))}
         </dl>
       </div>
-      <div className="hero-tagline" aria-hidden="true">
-        <span>Drive a</span>
-        <strong>Better Tomorrow</strong>
-      </div>
+
     </section>
   );
 }
