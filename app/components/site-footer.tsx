@@ -13,7 +13,7 @@ export function SiteFooter() {
             <b>Mitra<em>.</em>Mobil</b>
           </Link>
           <p>
-            Rental, jual beli, dan titip mobil terpercaya di Cilacap dan
+            Rental, jual, dan titip mobil terpercaya di Cilacap dan
             sekitarnya. Armada terawat, harga transparan, proses cepat.
           </p>
         </div>

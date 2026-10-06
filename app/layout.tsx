@@ -9,9 +9,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mitra Mobil — Sewa, Jual Beli & Titip Mobil",
+  title: "Mitra Mobil — Sewa, Jual & Titip Mobil",
   description:
-    "Rental, jual beli, dan titip mobil populer Indonesia: Toyota, Honda, Suzuki, Hyundai, BYD, Chery, Isuzu.",
+    "Rental, jual, dan titip mobil populer Indonesia: Toyota, Honda, Suzuki, Hyundai, BYD, Chery, Isuzu.",
 };
 
 export default function RootLayout({
