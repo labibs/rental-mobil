@@ -17,7 +17,7 @@ export function Hero() {
       <div className="hero-inner">
         <p className="hero-eyebrow">Sewa · Jual Beli · Titip Mobil</p>
         <h1>
-          Temukan Mobil
+          Temukan Mobil,
           <br />
           <span>Penyewa & Pembeli</span>
         </h1>
