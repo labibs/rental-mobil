@@ -1,4 +1,4 @@
-# PRD — Mitra.Mobil (Rental & Jual Beli Mobil)
+# PRD — Mitra.Mobil (Rental & Jual Mobil)
 
 ## Problem Statement
 Web katalog rental/jual mobil (Next.js 15 prototype). Permintaan user (Sep 2026): tambahkan menu "Titip Mobil" berisi Titip Sewa dan Titip Jual, lengkap dengan form, dan data yang disubmit harus menunggu approve admin dulu sebelum tampil di katalog utama. Desain mengikuti yang sudah ada.

@@ -15,7 +15,7 @@ export function Hero() {
       <img src={HERO_IMAGE} alt="Showroom Mitra Mobil" className="hero-bg" />
       <div className="hero-overlay" />
       <div className="hero-inner">
-        <p className="hero-eyebrow">Sewa · Jual Beli · Titip Mobil</p>
+        <p className="hero-eyebrow">Sewa · Jual · Titip Mobil</p>
         <h1>
           Temukan Mobil,
           <br />
