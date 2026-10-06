@@ -20,6 +20,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/cars/[id]/page.js"
+    ],
+    "/titip-mobil/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/titip-mobil/page.js"
     ]
   }
 }

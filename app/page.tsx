@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Car, RotateCcw } from "lucide-react";
-import { cars, type CarItem } from "./data/cars";
+import { ArrowRight, Car, RotateCcw, X } from "lucide-react";
+import { cars, brands, carTypes, type CarItem } from "./data/cars";
 import { SiteHeader } from "./components/site-header";
 import { Hero } from "./components/hero";
 import { SearchCard } from "./components/search-card";
@@ -14,6 +14,8 @@ import { WhatsappFab } from "./components/whatsapp-fab";
 import {
   defaultFilters,
   matchesFilters,
+  rentPriceOptions,
+  buyPriceOptions,
   type Filters,
   type SearchMode,
 } from "./components/catalog-filters";
@@ -77,7 +79,7 @@ export default function Home() {
       <SiteHeader />
       <Hero />
 
-      <div className="landing-container search-wrap">
+      <div className="search-wrap">
         <SearchCard filters={filters} onChange={updateFilters} onSearch={scrollToCatalog} />
       </div>
 
@@ -89,7 +91,8 @@ export default function Home() {
         }}
       />
 
-      <section className="landing-container catalog " id="katalog" data-testid="catalog-section">
+      <section className="landing-container catalog" id="katalog" data-testid="catalog-section">
+        {/* Catalog header */}
         <div className="catalog-head">
           <div>
             <p className="section-eyebrow">Pilihan Untuk Anda</p>
@@ -97,10 +100,6 @@ export default function Home() {
               {modeTitles[filters.mode]}
               {filters.brand ? ` · ${filters.brand}` : ""}
             </h2>
-            <span className="catalog-copy">
-              Mobil-mobil favorit keluarga Indonesia. Pilih kategori, bandingkan
-              harga, dan pesan langsung dari halaman detail.
-            </span>
           </div>
           <div className="catalog-tools">
             <label className="catalog-sort">
@@ -118,22 +117,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/*<div className="category-tabs" data-testid="category-tabs">
-          {categories.map((item) => (
-            <button
-              type="button"
-              key={item}
-              className={category === item ? "active" : ""}
-              onClick={() => setCategory(item)}
-              data-testid={`category-tab-${item.toLowerCase()}`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>*/}
 
         <p className="catalog-count" data-testid="catalog-count">
-          {filteredCars.length} mobil ditemukan
+          <strong>{filteredCars.length}</strong> mobil ditemukan
         </p>
 
         {filteredCars.length > 0 ? (
@@ -154,19 +140,63 @@ export default function Home() {
         )}
       </section>
 
-      <section className="landing-container consign-banner p-2" data-testid="consign-banner">
-        <div>
-          <p className="section-eyebrow light">Punya mobil menganggur?</p>
-          <h2>Titipkan mobil Anda, biar kami yang pasarkan.</h2>
-          <span>
-            Titip sewa harian atau titip jual. Ajukan lewat form, tim admin
-            kami tinjau, lalu mobil Anda tampil di katalog ini.
-          </span>
+      {/* Section Titip Mobil yang Menarik & Berkontras Tinggi */}
+      <section className="landing-container mt-14 mb-20 md:mt-20 md:mb-24" data-testid="consign-banner">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-6 sm:p-10 md:p-12 text-white shadow-2xl ring-1 ring-white/10">
+          {/* Subtle glowing ambient lights */}
+          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl" />
+
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-blue-500/20 px-3.5 py-1 text-xs font-bold text-blue-300 ring-1 ring-blue-400/30 uppercase tracking-wider mb-4">
+                <span>✨</span>
+                <span>Program Kemitraan Pemilik Mobil</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-3">
+                Punya mobil menganggur di garasi?
+              </h2>
+              <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-6">
+                Titipkan mobil Anda, biar kami yang pasarkan! Pilih <strong className="text-white">titip sewa harian</strong> dengan tarif yang Anda atur sendiri, atau <strong className="text-white">titip jual aman</strong> tanpa repot layani calon pembeli.
+              </p>
+
+              {/* 3 Keuntungan */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-white/10">
+                <div className="flex items-center gap-2 text-xs md:text-sm text-slate-200">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xs">✓</span>
+                  <span>Bagi Hasil Transparan</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs md:text-sm text-slate-200">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs">✓</span>
+                  <span>Perawatan &amp; Asuransi</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs md:text-sm text-slate-200">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs">✓</span>
+                  <span>Pantau Status Online</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row md:flex-col gap-3 shrink-0">
+              <Link
+                href="/titip-mobil"
+                className="inline-flex h-13 items-center justify-center gap-2.5 rounded-2xl bg-blue-600 px-7 text-sm md:text-base font-bold text-white shadow-lg shadow-blue-600/40 transition hover:bg-blue-500 hover:shadow-blue-500/50 active:scale-[0.98]"
+                data-testid="banner-titip-link"
+              >
+                <span>Mulai Titip Mobil</span>
+                <ArrowRight size={18} />
+              </Link>
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Mitra%20Mobil,%20saya%20tertarik%20titip%20mobil"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 text-sm font-semibold text-slate-200 backdrop-blur transition hover:bg-white/10 hover:text-white"
+              >
+                Tanya Admin WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
-        <Link href="/titip-mobil" className="btn-primary" data-testid="banner-titip-link">
-          Mulai Titip Mobil
-          <ArrowRight size={17} />
-        </Link>
       </section>
 
       <SiteFooter />
