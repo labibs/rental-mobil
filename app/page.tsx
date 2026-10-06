@@ -187,7 +187,7 @@ export default function Home() {
                 <ArrowRight size={18} />
               </Link>
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Mitra%20Mobil,%20saya%20tertarik%20titip%20mobil"
+                href="https://wa.me/6282177826596?text=Halo%20Mitra%20Mobil,%20saya%20tertarik%20titip%20mobil"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-6 text-sm font-semibold text-slate-200 backdrop-blur transition hover:bg-white/10 hover:text-white"

@@ -1,6 +1,9 @@
 {
-  "summary": "Full frontend E2E validation of the new WhatsApp click-to-send notification flow, Bagikan ke WhatsApp share button, Honda CR-V Hybrid RS hero image, and multi-photo consignment upload. All 6 review-request test scenarios PASS. window.open URLs were captured on admin approve, admin reject, and the share button; every URL is a valid wa.me link with the expected owner phone (6281234567890) and expected message text (DISETUJUI / belum dapat kami setujui / Cek mobil ini).",
-  "backend_issues": { "critical": [], "minor": [] },
+  "summary": "Full frontend E2E validation of the new WhatsApp click-to-send notification flow, Bagikan ke WhatsApp share button, Honda CR-V Hybrid RS hero image, and multi-photo consignment upload. All 6 review-request test scenarios PASS. window.open URLs were captured on admin approve, admin reject, and the share button; every URL is a valid wa.me link with the expected owner phone (6282177826596) and expected message text (DISETUJUI / belum dapat kami setujui / Cek mobil ini).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
   "frontend_issues": {
     "ui_bugs": [],
     "integration_issues": [],
@@ -16,12 +19,15 @@
     "Prototype storage remains a JSON file /app/data/consignments.json — not concurrency-safe."
   ],
   "updated_files": [],
-  "success_rate": { "backend": "n/a (frontend-only scope, backend flow already verified)", "frontend": "100%" },
+  "success_rate": {
+    "backend": "n/a (frontend-only scope, backend flow already verified)",
+    "frontend": "100%"
+  },
   "test_credentials": "admin@autohunt.local / admin123 (verified working)",
   "seed_data_creation": "Created 3 new consignments during test: titip-muminhu6-ztlvh (Toyota QA Test 2022, jual, APPROVED via UI + wa.me captured), titip-muminlp9-qzjqm (Honda QA Reject 2021, jual, REJECTED via UI + wa.me captured), titip-mumij8wz-k2dxl (Toyota Avanza WATest 2022, jual, still PENDING). Multi-photo (2 photos) added via input-image-url + add-photo-url-button. All prior seed data preserved.",
   "retest_needed": false,
   "should_main_agent_self_test": false,
-  "context_for_next_testing_agent": "App: Next.js only on port 3000 (frontend supervisor); backend supervisor entry stale. Data persists in /app/data/consignments.json. WhatsApp notifications are click-to-send: admin approve/reject calls PATCH /api/admin/consignments/[id] then window.open(wa.me/<normalized-phone>?text=<message>). To capture in tests, override window.open BEFORE clicking the approve/reject button on the same page context: `await page.evaluate(\"() => { window.__waUrls=[]; window.open=function(u){ window.__waUrls.push(u); return null; }; }\")`. Testids confirmed: approve-<id>, reject-<id>, consign-status-<id>, admin-nav-consignments, consign-pending-badge, share-<carId>, hero-section, gallery-thumbs, gallery-thumb-<n>, gallery-counter, consign-submit-button, consign-success, input-image-url, add-photo-url-button. Owner phone normalization 081234567890 -> 6281234567890 verified. Approved status text = 'Disetujui', pending = 'Menunggu', rejected = 'Ditolak'.",
+  "context_for_next_testing_agent": "App: Next.js only on port 3000 (frontend supervisor); backend supervisor entry stale. Data persists in /app/data/consignments.json. WhatsApp notifications are click-to-send: admin approve/reject calls PATCH /api/admin/consignments/[id] then window.open(wa.me/<normalized-phone>?text=<message>). To capture in tests, override window.open BEFORE clicking the approve/reject button on the same page context: `await page.evaluate(\"() => { window.__waUrls=[]; window.open=function(u){ window.__waUrls.push(u); return null; }; }\")`. Testids confirmed: approve-<id>, reject-<id>, consign-status-<id>, admin-nav-consignments, consign-pending-badge, share-<carId>, hero-section, gallery-thumbs, gallery-thumb-<n>, gallery-counter, consign-submit-button, consign-success, input-image-url, add-photo-url-button. Owner phone normalization 081234567890 -> 6282177826596 verified. Approved status text = 'Disetujui', pending = 'Menunggu', rejected = 'Ditolak'.",
   "detailed_results": {
     "hero_image_naturalWidth": 1264,
     "share_button_wa_url": "https://wa.me/?text=Cek%20mobil%20ini%20di%20Mitra.Mobil%3A%20*Toyota%20Avanza%201.5%20G%20CVT*%20%E2%80%94%20Rp%C2%A0350.000%2Fhari%0Ahttp%3A%2F%2Flocalhost%3A3000%2Fcars%2Ftoyota-avanza",
@@ -32,10 +38,10 @@
     "photos_added_before_submit": 2,
     "admin_login": "OK",
     "approve_status_after_click": "Disetujui",
-    "approve_wa_url_contains_6281234567890": true,
+    "approve_wa_url_contains_6282177826596": true,
     "approve_wa_url_contains_DISETUJUI": true,
     "reject_status_after_click": "Ditolak",
-    "reject_wa_url_contains_6281234567890": true,
+    "reject_wa_url_contains_6282177826596": true,
     "reject_wa_url_contains_belum_dapat_kami_setujui": true,
     "console_errors": "none"
   },

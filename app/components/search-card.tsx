@@ -6,7 +6,7 @@ import {
   type CSSProperties,
   type FormEvent,
 } from "react";
-import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
 import { brands, carTypes } from "../data/cars";
 import {
   buyPriceOptions,
@@ -31,15 +31,11 @@ type Props = {
 };
 
 const fieldLabel =
-  "flex min-w-0 flex-col gap-1 text-xs font-medium text-slate-500";
+  "flex min-w-0 flex-col gap-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400";
 const fieldControl =
-  "h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20";
+  "h-9 w-full rounded-lg border border-slate-200 bg-slate-50/70 px-2.5 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/15";
 
-export function SearchCard({
-  filters,
-  onChange,
-  onSearch,
-}: Props) {
+export function SearchCard({ filters, onChange, onSearch }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [draft, setDraft] = useState<Filters>(filters);
 
@@ -64,10 +60,22 @@ export function SearchCard({
     setDraft(next);
     onChange(next);
     onSearch(next);
-    setExpanded(false); // tutup panel setelah cari (mobile)
+    setExpanded(false); // tutup panel setelah cari
   };
 
-  // Active filter count
+  const handleReset = () => {
+    const reset: Filters = {
+      ...draft,
+      brand: "",
+      type: "",
+      maxPrice: 0,
+      query: "",
+    };
+    setDraft(reset);
+    onChange(reset);
+    onSearch(reset);
+  };
+
   const activeFilterCount = [
     Boolean(draft.brand),
     Boolean(draft.type),
@@ -78,15 +86,17 @@ export function SearchCard({
   return (
     <section
       style={{ "--sticky-top": `${NAVBAR_HEIGHT_MOBILE}px` } as CSSProperties}
-      className="sticky top-[var(--sticky-top)] z-30 bg-white border-t border-slate-200/90 shadow-[0_8px_20px_-8px_rgba(15,23,42,0.18)] transition-all md:static md:top-auto md:rounded-2xl md:p-4 md:shadow-lg md:ring-1 md:ring-slate-200 md:border-t-0"
+      className="sticky top-[var(--sticky-top)] z-30 w-full border-b border-slate-200/80 bg-white/90 shadow-[0_10px_24px_-12px_rgba(30,64,175,0.25)] backdrop-blur-md transition-all md:static md:top-auto md:rounded-2xl md:border md:border-slate-200 md:bg-white md:p-3.5 md:shadow-lg md:shadow-blue-900/5 md:backdrop-blur-none"
       data-testid="search-card"
     >
-      {/* Baris 1: Mode Tabs + Tombol Filter */}
-      <div className="flex flex-nowrap items-center justify-between gap-2 px-4 py-2.5 md:p-0">
+      {/* Aksen gradient tipis di atas */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-blue-600 via-sky-400 to-indigo-500 md:hidden" />
 
+      {/* Baris 1: Mode Tabs + Tombol Filter */}
+      <div className="flex flex-nowrap items-center justify-between gap-2 px-3 py-2 md:p-0">
         <div
           role="tablist"
-          className="flex min-w-0 flex-1 gap-1 rounded-xl bg-slate-100 p-1 md:flex-none md:gap-2 md:bg-transparent md:p-0"
+          className="relative flex min-w-0 flex-1 gap-0.5 rounded-full bg-slate-100 p-0.5 md:flex-none md:gap-1.5 md:bg-transparent md:p-0"
         >
           {modeTabs.map((tab) => {
             const active = draft.mode === tab.value;
@@ -98,11 +108,10 @@ export function SearchCard({
                 aria-selected={active}
                 onClick={() => handleModeChange(tab.value)}
                 data-testid={`mode-tab-${tab.value}`}
-                className={`min-w-0 flex-1 whitespace-nowrap rounded-lg px-2.5 py-2 text-center text-[13px] font-semibold transition md:flex-none md:px-5 md:text-sm ${
-                  active
-                    ? "bg-white text-blue-600 shadow-sm md:bg-blue-600 md:text-white md:shadow-none"
+                className={`min-w-0 flex-1 whitespace-nowrap rounded-full px-2.5 py-1.5 text-center text-[11px] font-semibold transition-all md:flex-none md:px-4 md:text-xs ${active
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30"
                     : "text-slate-500 hover:text-slate-800 md:bg-slate-100 md:text-slate-600 md:hover:bg-slate-200"
-                }`}
+                  }`}
               >
                 <span className="sm:hidden">{tab.short}</span>
                 <span className="hidden sm:inline">{tab.label}</span>
@@ -117,142 +126,146 @@ export function SearchCard({
           aria-expanded={expanded}
           aria-controls="search-fields"
           data-testid="filter-toggle-button"
-          className={`inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 text-[13px] font-semibold transition md:h-10 md:text-sm ${
-            expanded
-              ? "bg-blue-600 text-white shadow-sm hover:bg-blue-700"
+          className={`inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 text-[11px] font-semibold transition md:h-8 md:text-xs ${expanded
+              ? "bg-slate-900 text-white shadow-sm"
               : activeFilterCount > 0
-              ? "bg-blue-50 text-blue-700 ring-1 ring-blue-300 hover:bg-blue-100"
-              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-          }`}
+                ? "bg-blue-50 text-blue-700 ring-1 ring-blue-300 hover:bg-blue-100"
+                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
           title={expanded ? "Tutup panel filter" : "Buka panel filter & pencarian"}
         >
-          <SlidersHorizontal size={15} />
+          <SlidersHorizontal size={13} />
           <span>Filter</span>
           {activeFilterCount > 0 && (
             <span
-              className={`flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold ${
-                expanded ? "bg-white text-blue-700" : "bg-blue-600 text-white"
-              }`}
+              className={`flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-bold ${expanded ? "bg-white text-slate-900" : "bg-blue-600 text-white"
+                }`}
             >
               {activeFilterCount}
             </span>
           )}
           <ChevronDown
-            size={14}
-            className={`transition-transform duration-200 ${
-              expanded ? "rotate-180" : ""
-            }`}
+            size={12}
+            className={`transition-transform duration-200 ${expanded ? "rotate-180" : ""
+              }`}
           />
         </button>
       </div>
 
-      {/* Baris 2: Form Filter & Pencarian (Collapsible) */}
-      <form
-        id="search-fields"
-        role="search"
-        onSubmit={handleSubmit}
-        className={`${
-          expanded ? "flex" : "hidden"
-        } flex-col gap-3 px-3 pb-3 pt-3 border-t border-slate-100 mt-2.5 md:mt-3 md:flex-row md:items-end md:p-0 md:pt-3`}
+      {/* Baris 2: Form Filter & Pencarian (Collapsible dengan animasi) */}
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${expanded
+            ? "grid-rows-[1fr] opacity-100"
+            : "grid-rows-[0fr] opacity-0 md:grid-rows-[0fr]"
+          }`}
       >
-        <label className={`${fieldLabel} md:flex-[1.5] md:min-w-[190px]`}>
-          <span>Cari mobil</span>
-          <div className="relative">
-            <Search
-              size={16}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-            <input
-              type="search"
-              enterKeyHint="search"
-              value={draft.query}
-              onChange={(event) => patchDraft({ query: event.target.value })}
-              placeholder="Avanza, Brio, Ioniq..."
-              data-testid="search-input"
-              className={`${fieldControl} pl-9`}
-            />
-          </div>
-        </label>
-
-        <label className={`${fieldLabel} md:flex-1 md:min-w-[130px]`}>
-          <span>Merek</span>
-          <select
-            value={draft.brand}
-            onChange={(event) => patchDraft({ brand: event.target.value })}
-            data-testid="brand-select"
-            className={fieldControl}
-          >
-            <option value="">Semua merek</option>
-            {brands.map((brand) => (
-              <option key={brand} value={brand}>
-                {brand}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={`${fieldLabel} md:flex-1 md:min-w-[125px]`}>
-          <span>Tipe bodi</span>
-          <select
-            value={draft.type}
-            onChange={(event) => patchDraft({ type: event.target.value })}
-            data-testid="type-select"
-            className={fieldControl}
-          >
-            <option value="">Semua tipe</option>
-            {carTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={`${fieldLabel} md:flex-1 md:min-w-[135px]`}>
-          <span>{draft.mode === "sewa" ? "Harga sewa" : "Harga beli"}</span>
-          <select
-            value={draft.maxPrice}
-            onChange={(event) =>
-              patchDraft({ maxPrice: Number(event.target.value) })
-            }
-            data-testid="price-select"
-            className={fieldControl}
-          >
-            {priceOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <div className="flex gap-2 w-full md:w-auto">
-          {activeFilterCount > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                const reset: Filters = { ...draft, brand: "", type: "", maxPrice: 0, query: "" };
-                setDraft(reset);
-                onChange(reset);
-                onSearch(reset);
-              }}
-              className="inline-flex h-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-              title="Reset filter"
+        <form
+          id="search-fields"
+          role="search"
+          onSubmit={handleSubmit}
+          className="min-h-0 overflow-hidden"
+        >
+          <div className="grid grid-cols-2 gap-2.5 border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white px-3 pb-3 pt-3 md:flex md:flex-row md:items-end md:border-t-0 md:bg-none md:p-0 md:pt-3">
+            <label
+              className={`${fieldLabel} col-span-2 md:flex-[1.5] md:min-w-[190px]`}
             >
-              Reset
-            </button>
-          )}
+              <span>Cari mobil</span>
+              <div className="relative">
+                <Search
+                  size={14}
+                  className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type="search"
+                  enterKeyHint="search"
+                  value={draft.query}
+                  onChange={(event) => patchDraft({ query: event.target.value })}
+                  placeholder="Avanza, Brio, Ioniq..."
+                  data-testid="search-input"
+                  className={`${fieldControl} pl-8`}
+                />
+              </div>
+            </label>
 
-          <button
-            type="submit"
-            data-testid="search-submit-button"
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-700 active:scale-[0.98] md:flex-none md:w-auto"
-          >
-            <Search size={17} />
-            Cari Mobil
-          </button>
-        </div>
-      </form>
+            <label className={`${fieldLabel} md:flex-1 md:min-w-[130px]`}>
+              <span>Merek</span>
+              <select
+                value={draft.brand}
+                onChange={(event) => patchDraft({ brand: event.target.value })}
+                data-testid="brand-select"
+                className={fieldControl}
+              >
+                <option value="">Semua merek</option>
+                {brands.map((brand) => (
+                  <option key={brand} value={brand}>
+                    {brand}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className={`${fieldLabel} md:flex-1 md:min-w-[125px]`}>
+              <span>Tipe bodi</span>
+              <select
+                value={draft.type}
+                onChange={(event) => patchDraft({ type: event.target.value })}
+                data-testid="type-select"
+                className={fieldControl}
+              >
+                <option value="">Semua tipe</option>
+                {carTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label
+              className={`${fieldLabel} col-span-2 md:col-span-1 md:flex-1 md:min-w-[135px]`}
+            >
+              <span>{draft.mode === "sewa" ? "Harga sewa" : "Harga beli"}</span>
+              <select
+                value={draft.maxPrice}
+                onChange={(event) =>
+                  patchDraft({ maxPrice: Number(event.target.value) })
+                }
+                data-testid="price-select"
+                className={fieldControl}
+              >
+                {priceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div className="col-span-2 flex w-full gap-2 md:col-span-1 md:w-auto">
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="inline-flex h-9 shrink-0 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                  title="Reset filter"
+                >
+                  <RotateCcw size={12} />
+                  Reset
+                </button>
+              )}
+
+              <button
+                type="submit"
+                data-testid="search-submit-button"
+                className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 text-xs font-semibold text-white shadow-md shadow-blue-600/25 transition hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] md:flex-none md:w-auto"
+              >
+                <Search size={14} />
+                Cari Mobil
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     </section>
   );
 }
