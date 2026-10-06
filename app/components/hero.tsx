@@ -17,14 +17,13 @@ export function Hero() {
       <div className="hero-inner">
         <p className="hero-eyebrow">Sewa · Jual Beli · Titip Mobil</p>
         <h1>
-          Lebih dari Sekadar Mobil.
+          Temukan Mobil
           <br />
-          <span>Perjalanan Baru Anda.</span>
+          <span>Penyewa & Pembeli</span>
         </h1>
         <p className="hero-copy">
-          Temukan Avanza, Fortuner, Ioniq 5 hingga BYD Seal dalam satu tempat.
-          Sewa harian, beli unit baru maupun bekas, atau titipkan mobil Anda
-          untuk kami pasarkan.
+          Hubungkan mobil Anda dengan calon penyewa dan pembeli,
+          atau temukan kendaraan yang sesuai dengan kebutuhan Anda.
         </p>
         <div className="hero-actions">
           <a href="#katalog" className="btn-primary" data-testid="hero-explore-button">
