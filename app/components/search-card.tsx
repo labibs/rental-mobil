@@ -96,7 +96,7 @@ export function SearchCard({ filters, onChange, onSearch }: Props) {
       <div className="flex flex-nowrap items-center justify-between gap-2 px-3 py-2 md:p-0">
         <div
           role="tablist"
-          className="relative flex min-w-0 flex-1 gap-0.5 rounded-full bg-slate-100 p-0.5 md:flex-none md:gap-1.5 md:bg-transparent md:p-0"
+          className="flex h-9 min-w-0 flex-1 items-stretch gap-0.5 rounded-full bg-slate-100 p-0.5 md:flex-none md:gap-1.5 md:bg-transparent md:p-0"
         >
           {modeTabs.map((tab) => {
             const active = draft.mode === tab.value;
@@ -108,8 +108,8 @@ export function SearchCard({ filters, onChange, onSearch }: Props) {
                 aria-selected={active}
                 onClick={() => handleModeChange(tab.value)}
                 data-testid={`mode-tab-${tab.value}`}
-                className={`min-w-0 flex-1 whitespace-nowrap rounded-full px-2.5 py-1.5 text-center text-[11px] font-semibold transition-all md:flex-none md:px-4 md:text-xs ${active
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30"
+                className={`flex min-w-0 flex-1 items-center justify-center whitespace-nowrap rounded-full px-3 text-[11px] font-semibold transition-all md:flex-none md:px-4 md:text-xs ${active
+                    ? "bg-white text-blue-600 shadow-sm ring-1 ring-blue-100 md:bg-blue-600 md:text-white md:ring-0"
                     : "text-slate-500 hover:text-slate-800 md:bg-slate-100 md:text-slate-600 md:hover:bg-slate-200"
                   }`}
               >
@@ -126,21 +126,16 @@ export function SearchCard({ filters, onChange, onSearch }: Props) {
           aria-expanded={expanded}
           aria-controls="search-fields"
           data-testid="filter-toggle-button"
-          className={`inline-flex h-8 shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 text-[11px] font-semibold transition md:h-8 md:text-xs ${expanded
-              ? "bg-slate-900 text-white shadow-sm"
-              : activeFilterCount > 0
-                ? "bg-blue-50 text-blue-700 ring-1 ring-blue-300 hover:bg-blue-100"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+          className={`inline-flex h-9 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-[11px] font-semibold transition md:text-xs ${expanded || activeFilterCount > 0
+              ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30 hover:from-blue-700 hover:to-indigo-700"
+              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
             }`}
           title={expanded ? "Tutup panel filter" : "Buka panel filter & pencarian"}
         >
           <SlidersHorizontal size={13} />
           <span>Filter</span>
           {activeFilterCount > 0 && (
-            <span
-              className={`flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-bold ${expanded ? "bg-white text-slate-900" : "bg-blue-600 text-white"
-                }`}
-            >
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-bold text-blue-700">
               {activeFilterCount}
             </span>
           )}
@@ -155,8 +150,8 @@ export function SearchCard({ filters, onChange, onSearch }: Props) {
       {/* Baris 2: Form Filter & Pencarian (Collapsible dengan animasi) */}
       <div
         className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${expanded
-            ? "grid-rows-[1fr] opacity-100"
-            : "grid-rows-[0fr] opacity-0 md:grid-rows-[0fr]"
+          ? "grid-rows-[1fr] opacity-100"
+          : "grid-rows-[0fr] opacity-0 md:grid-rows-[0fr]"
           }`}
       >
         <form
