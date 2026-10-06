@@ -3,7 +3,7 @@ import { Car, MapPin, MessageCircle, Phone } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer" data-testid="site-footer">
+    <footer className="site-footer mt-16 md:mt-14" data-testid="site-footer">
       <div className="site-footer-inner">
         <div>
           <Link href="/" className="site-brand light">

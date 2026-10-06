@@ -53,8 +53,8 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
               src="/logo-mitra.mobil.png"
               alt="Mitra.Mobil"
               className="site-brand-logo"
-              width={120}
-              height={36}
+              width={320}
+              height={64}
             />
           </Link>
 
@@ -72,10 +72,11 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" }) {
                 <Link
                   href={link.href}
                   key={link.label}
+                  className="mobile-only"
                   data-testid={link.testId}
                   onClick={() => setOpen(false)}
                 >
-                  <Icon size={18} className="mobile-only text-blue-600" />
+                  <Icon size={18} className="text-blue-600" />
                   <span>{link.label}</span>
                 </Link>
               );

@@ -42,7 +42,7 @@ export default function Home() {
     fetch("/api/consignments")
       .then((response) => (response.ok ? response.json() : { cars: [] }))
       .then((data) => setConsignedCars(Array.isArray(data.cars) ? data.cars : []))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const allCars = useMemo(() => [...cars, ...consignedCars], [consignedCars]);
@@ -141,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* Section Titip Mobil yang Menarik & Berkontras Tinggi */}
-      <section className="landing-container mt-14 mb-20 md:mt-20 md:mb-24" data-testid="consign-banner">
+      <section className="landing-container mt-14 mb-20 md:mt-20 md:mb-20" data-testid="consign-banner">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 p-6 sm:p-10 md:p-12 text-white shadow-2xl ring-1 ring-white/10">
           {/* Subtle glowing ambient lights */}
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
